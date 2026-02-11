@@ -1,8 +1,8 @@
 // src/components/layout/Footer.tsx
 export default function Footer() {
   return (
-    <footer className="border-t bg-muted/40 py-8">
-      <div className="container grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+    <footer className="border-t bg-muted/40 py-8 ">
+      <div className="container grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left my-0 mx-auto">
         <div>
           <h3 className="font-semibold mb-4">Florería La Paz</h3>
           <p className="text-sm text-muted-foreground">
@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
+      <div className="container mt-8 pt-6 border-t text-center text-sm text-muted-foreground my-0 mx-auto">
         © {new Date().getFullYear()} Florería La Paz. Todos los derechos reservados.
       </div>
     </footer>
