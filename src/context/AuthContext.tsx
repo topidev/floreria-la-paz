@@ -4,6 +4,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { auth, googleProvider } from '../lib/firebase';
 import { User, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   user: User | null;
@@ -17,20 +19,31 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (  ) => {
       setUser(user);
       setLoading(false);
+
+      if(user) {
+        router.push('/')
+        toast.success('¡Bienvenido! Sesión con Google');
+      }
     });
     return unsubscribe;
-  }, []);
+  }, [router]);
 
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error("Error en Google sign-in:", error);
+    } catch (error: any) {
+      if (error.code === "auth/popup-closed-by-user") {
+        console.log("Usuario canceló el popup de Google");
+        return
+      }
+      console.log("Error en Google sign-in:", error);
+      throw error;
     }
   };
 

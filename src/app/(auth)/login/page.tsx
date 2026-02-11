@@ -19,6 +19,7 @@ export default function LoginPage() {
   const { signInWithGoogle, loading: authLoading } = useAuth(); // si tu context tiene loading global
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false)
 
   const {
     register,
@@ -60,12 +61,13 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    setLoadingGoogle(true)
     try {
       await signInWithGoogle();
-      toast.success('¡Bienvenido! Sesión con Google');
-      router.push('/');
-    } catch (error) {
-      toast.error('Error al iniciar con Google');
+    } catch (error: any) {
+      toast.error('No pudimos iniciar sesión con Google. Intenta de nuevo.');
+    } finally {
+      setLoadingGoogle(false)
     }
   };
 
@@ -122,8 +124,13 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Button variant="outline" className="w-full cursor-pointer" onClick={handleGoogleLogin}>
-          Continuar con Google
+        <Button 
+          variant="outline" 
+          className="w-full cursor-pointer" 
+          onClick={handleGoogleLogin}
+          disabled={loadingGoogle}
+        >
+          {loadingGoogle ? 'Abriendo Google...' : 'Continuar con Google'}
         </Button>
       </CardContent>
       <CardFooter className="flex justify-center text-sm text-muted-foreground">
