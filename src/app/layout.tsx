@@ -32,8 +32,13 @@ export default function RootLayout({
       >
         <>
           <AuthProvider>
-            <Toaster richColors position="bottom-right" />
-            <ThemeProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster richColors position="bottom-right" />
               {children}
             </ThemeProvider>
           </AuthProvider>

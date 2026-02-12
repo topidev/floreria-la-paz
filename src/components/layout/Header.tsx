@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '../../context/AuthContext';
 import { ShoppingCart, LogIn, LogOut, User, Moon, Package, Sun, History, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -67,9 +67,10 @@ export default function Header() {
           {/* Menú de usuario */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
+              <Button variant="ghost" size="icon" className="rounded-full cursor-pointer">
                 {user ? (
                   <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? 'Usuario'} />
                     <AvatarFallback className="bg-primary/10 text-primary">
                       {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
@@ -81,7 +82,7 @@ export default function Header() {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 bg-background">
               {user ? (
                 <>
                   <DropdownMenuItem asChild>

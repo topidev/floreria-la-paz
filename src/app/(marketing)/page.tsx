@@ -1,8 +1,6 @@
 // HomePage.tsx
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
@@ -12,7 +10,7 @@ export default function Home() {
 
 
   return (
-    <div className="w-full flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="w-full flex flex-col min-h-screen items-center justify-center bg-background font-sans ">
 
       <Carousel
         className="overflow-hidden w-full"
@@ -28,7 +26,7 @@ export default function Home() {
           containScroll: "trimSnaps",
         }}
       >
-        <CarouselContent className="-ml-0">
+        <CarouselContent className="ml-0">
           {Array.from({ length: 4 }).map((_, index) => (
             <CarouselItem key={index} className="pl-0">
               <div className="relative w-full aspect-video
@@ -50,7 +48,7 @@ export default function Home() {
                 >
                   <Link
                     href="/products/on-sale"
-                    className="text-center w-full h-full flex items-end justify-end text-white px-6"
+                    className="text-center text-2xl w-full h-full flex items-end justify-end text-accent px-6"
                   >
                   </Link>
                 </div>
@@ -60,7 +58,7 @@ export default function Home() {
         </CarouselContent>
       </Carousel>
 
-      <main className="flex min-h-screen w-full container flex-col items-center justify-center py-32 px-16 dark:bg-black text-center">
+      <main className="flex min-h-screen w-full container flex-col items-center justify-center py-32 px-16 text-center">
         <Image
           className="dark:invert"
           src="/next.svg"

@@ -3,9 +3,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,10 +11,8 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import { Eye, EyeOff } from 'lucide-react';
 import { loginSchema, LoginForm } from '../../../lib/validation';
 import { useState } from 'react';
-import { FirebaseError } from 'firebase/app';
 
 export default function LoginPage() {
-  const router = useRouter();
   const { signInWithGoogle, signInWithEmail, loading: authLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
