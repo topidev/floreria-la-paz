@@ -4,19 +4,20 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../../context/AuthContext'; // tu context existente
+import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
 import { loginSchema, LoginForm } from '../../../lib/validation';
 import { useState } from 'react';
+import { FirebaseError } from 'firebase/app';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithGoogle, loading: authLoading } = useAuth(); // si tu context tiene loading global
+  const { signInWithGoogle, signInWithEmail, loading: authLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false)
@@ -33,28 +34,13 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
-      // Nota: Aquí usamos signInWithEmailAndPassword de Firebase
-      // Importa lo necesario si no está en tu context
-      const { signInWithEmailAndPassword } = await import('firebase/auth');
-      const { auth } = await import('../../../lib/firebase');
 
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      await signInWithEmail(data.email, data.password)
 
-      toast.success('¡Sesión iniciada exitosamente!');
-      router.push('/');
-    } catch (error: any) {
-      let message = 'Error al iniciar sesión';
+    } catch (error: unknown) {
 
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        message = 'Email o contraseña incorrectos';
-      } else if (error.code === 'auth/invalid-email') {
-        message = 'Email inválido';
-      } else if (error.code === 'auth/too-many-requests') {
-        message = 'Demasiados intentos. Intenta más tarde';
-      }
+      console.log(error)
 
-      toast.error(message);
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -63,9 +49,13 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoadingGoogle(true)
     try {
+
       await signInWithGoogle();
-    } catch (error: any) {
-      toast.error('No pudimos iniciar sesión con Google. Intenta de nuevo.');
+
+    } catch (error: unknown) {
+
+      console.log('Auth Error: ', error)
+
     } finally {
       setLoadingGoogle(false)
     }
@@ -124,9 +114,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Button 
-          variant="outline" 
-          className="w-full cursor-pointer" 
+        <Button
+          variant="outline"
+          className="w-full cursor-pointer"
           onClick={handleGoogleLogin}
           disabled={loadingGoogle}
         >

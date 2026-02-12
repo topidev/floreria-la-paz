@@ -1,12 +1,65 @@
 // HomePage.tsx
+'use client'
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
 
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="w-full flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+
+      <Carousel
+        className="overflow-hidden w-full"
+        plugins={[
+          Autoplay({
+            delay: 5000,
+            stopOnInteraction: true
+          })
+        ]}
+        opts={{
+          loop: true,
+          dragFree: false,
+          containScroll: "trimSnaps",
+        }}
+      >
+        <CarouselContent className="-ml-0">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <CarouselItem key={index} className="pl-0">
+              <div className="relative w-full aspect-video
+              ">
+                <Image
+                  src={`/images/heroshot/tulpeon_hs_${index + 1}.png`}
+                  alt={`Oferta especial - Hero ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                  quality={90}
+                  sizes="100vw"
+                />
+
+                <div
+                  className="
+                    absolute inset-0 flex items-center justify-center bg-black/15
+                    hover:bg-black/30 transition-colors"
+                >
+                  <Link
+                    href="/products/on-sale"
+                    className="text-center w-full h-full flex items-end justify-end text-white px-6"
+                  >
+                  </Link>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
       <main className="flex min-h-screen w-full container flex-col items-center justify-center py-32 px-16 dark:bg-black text-center">
         <Image
           className="dark:invert"

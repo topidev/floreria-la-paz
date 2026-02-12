@@ -3,15 +3,21 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingCart, LogIn, LogOut, User } from 'lucide-react';
-import { useIsMobile } from '@/src/hooks/useMediaQuery';
+import { ShoppingCart, LogIn, LogOut, User, Moon, Package, Sun, History, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 export default function Header() {
   const { user, logout } = useAuth();
-  const isMobile = useIsMobile()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -25,7 +31,7 @@ export default function Header() {
 
   const isDark = mounted && theme === 'dark'
 
-  const toogleTheme = () => {
+  const toggleTheme = () => {
     setTheme(isDark ? 'light' : 'dark')
   }
 
@@ -78,23 +84,33 @@ export default function Header() {
             <DropdownMenuContent align="end" className="w-56">
               {user ? (
                 <>
-                  <DropdownMenuLabel>
-                    {user.displayName || user.email?.split('@')[0]}
-                  </DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className='flex items-center cursor-pointer'>
+                      <User className='mr-2 h-4 w-4' />
+                      {user.displayName || user.email?.split('@')[0]}
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/mis-pedidos" className="flex items-center">
+                    <Link href="/orders" className="flex items-center cursor-pointer">
                       <History className="mr-2 h-4 w-4" />
                       Mis pedidos
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/compras" className="flex items-center">
+                    <Link href="/history" className="flex items-center cursor-pointer">
                       <Package className="mr-2 h-4 w-4" />
                       Compras
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={toggleTheme} className="flex items-center">
+                  <DropdownMenuItem asChild>
+                    <Link href="/favorites" className="flex items-center cursor-pointer">
+                      <Heart className="mr-2 h-4 w-4" />
+                      Favoritos
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={toggleTheme} className="flex items-center cursor-pointer">
                     {isDark ? (
                       <>
                         <Sun className="mr-2 h-4 w-4" />
@@ -107,10 +123,9 @@ export default function Header() {
                       </>
                     )}
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={logout}
-                    className="text-destructive focus:text-destructive"
+                    className="text-destructive focus:text-destructive cursor-pointer"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     Cerrar sesión
@@ -119,13 +134,13 @@ export default function Header() {
               ) : (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href="/login" className="flex items-center">
+                    <Link href="/login" className="flex items-center cursor-pointer">
                       <LogIn className="mr-2 h-4 w-4" />
                       Iniciar sesión
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/register" className="flex items-center">
+                    <Link href="/register" className="flex items-center cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       Crear cuenta
                     </Link>

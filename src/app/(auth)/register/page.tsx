@@ -4,9 +4,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../../../lib/firebase';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,13 +12,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Eye, EyeOff } from 'lucide-react'; // instala lucide-react si no lo tienes: pnpm add lucide-react
 import { registerSchema } from '../../../lib/validation';
 import { useState } from 'react';
+import { useAuth } from '@/src/context/AuthContext';
+import { FirebaseError } from 'firebase/app';
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { signUpWithEmail } = useAuth()
 
   const {
     register,
@@ -34,27 +34,17 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: RegisterForm) => {
+
     setLoading(true);
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      const user = userCredential.user;
 
-      // Actualiza displayName
-      await updateProfile(user, { displayName: data.name.trim() });
+      await signUpWithEmail(data.email, data.password, data.name)
 
-      toast.success('¡Cuenta creada exitosamente!');
-      reset();
-      router.push('/');
-    } catch (error: any) {
-      const errorCode = error.code;
-      let message = 'Error al crear la cuenta';
+    } catch (error: unknown) {
 
-      if (errorCode === 'auth/email-already-in-use') message = 'El email ya está en uso';
-      if (errorCode === 'auth/invalid-email') message = 'Email inválido';
-      if (errorCode === 'auth/weak-password') message = 'Contraseña demasiado débil';
-
-      toast.error(message);
       console.error(error);
+
     } finally {
       setLoading(false);
     }
