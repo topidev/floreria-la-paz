@@ -6,10 +6,28 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '../../context/AuthContext';
 import { ShoppingCart, LogIn, LogOut, User } from 'lucide-react';
 import { useIsMobile } from '@/src/hooks/useMediaQuery';
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const isMobile = useIsMobile()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const mountTheme = () => {
+      setMounted(true)
+    }
+
+    mountTheme()
+  }, [])
+
+  const isDark = mounted && theme === 'dark'
+
+  const toogleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark')
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -40,30 +58,82 @@ export default function Header() {
             <span className="sr-only">Carrito</span>
           </Button>
 
-          {/* Auth */}
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-sm hidden md:inline-block">
-                {user.displayName || user.email?.split('@')[0]}
-              </span>
-              <Button title='Salir' variant="ghost" size="sm" onClick={logout}>
-                <LogOut className="h-4 w-4 mr-2" />
-              </Button>
-            </div>
-          ) : (
-            <Button variant="outline" size="sm" className='' asChild>
-              <Link href="/login" title='Iniciar sesión'>
-                {isMobile ? (
-                  <User className='block h-4 w-4' />
-                ):(
-                  <>
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Iniciar sesión
-                  </>
+          {/* Menú de usuario */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                {user ? (
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <User className="h-5 w-5" />
                 )}
-              </Link>
-            </Button>
-          )}
+                <span className="sr-only">Menú de usuario</span>
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-56">
+              {user ? (
+                <>
+                  <DropdownMenuLabel>
+                    {user.displayName || user.email?.split('@')[0]}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/mis-pedidos" className="flex items-center">
+                      <History className="mr-2 h-4 w-4" />
+                      Mis pedidos
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/compras" className="flex items-center">
+                      <Package className="mr-2 h-4 w-4" />
+                      Compras
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={toggleTheme} className="flex items-center">
+                    {isDark ? (
+                      <>
+                        <Sun className="mr-2 h-4 w-4" />
+                        Modo claro
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="mr-2 h-4 w-4" />
+                        Modo oscuro
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Cerrar sesión
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="flex items-center">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Iniciar sesión
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/register" className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      Crear cuenta
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
