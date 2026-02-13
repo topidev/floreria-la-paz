@@ -45,14 +45,17 @@ export default function Header() {
 
         {/* Navegación central */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/products" title='Products' className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/products" title='Products' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
             Catálogo
           </Link>
-          <Link href="/ocasiones" title='Ocasiones' className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/ocasiones" title='Ocasiones' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
             Ocasiones
           </Link>
-          <Link href="/suscripciones" title='Suscripciones' className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/suscripciones" title='Suscripciones' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
             Suscripciones
+          </Link>
+          <Link href="/contactus" title='Contact Us' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
+            Contact
           </Link>
         </nav>
 

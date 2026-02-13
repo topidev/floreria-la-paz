@@ -4,16 +4,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react'; // instala lucide-react si no lo tienes: pnpm add lucide-react
 import { registerSchema } from '../../../lib/validation';
 import { useState } from 'react';
 import { useAuth } from '@/src/context/AuthContext';
-import { FirebaseError } from 'firebase/app';
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
@@ -52,21 +50,32 @@ export default function RegisterPage() {
 
   return (
     <>
-      <CardHeader>
+      <CardHeader className='text-secondary'>
         <CardTitle>Crea tu cuenta</CardTitle>
         <CardDescription>Regístrate para acceder a pedidos y ofertas exclusivas</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-secondary">
           <div className="space-y-2">
             <Label htmlFor="name">Nombre completo</Label>
-            <Input id="name" {...register('name')} placeholder="John Doe" />
+            <Input
+              id="name"
+              {...register('name')}
+              placeholder="John Doe"
+              className='placeholder-secondary-foreground'
+            />
             {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" {...register('email')} placeholder="tu@email.com" />
+            <Input
+              id="email"
+              type="email"
+              {...register('email')}
+              placeholder="tu@email.com"
+              className='placeholder-secondary-foreground'
+            />
             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
@@ -110,7 +119,7 @@ export default function RegisterPage() {
       </CardContent>
       <CardFooter className="flex justify-center text-sm text-muted-foreground">
         ¿Ya tienes cuenta?{' '}
-        <a href="/login" className="text-primary hover:underline ml-1">
+        <a href="/login" className="text-primary transition-colors ml-1">
           Inicia sesión
         </a>
       </CardFooter>

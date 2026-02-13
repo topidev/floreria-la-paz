@@ -61,11 +61,11 @@ export default function LoginPage() {
 
   return (
     <>
-      <CardHeader>
+      <CardHeader className='text-secondary'>
         <CardTitle>Iniciar Sesión</CardTitle>
         <CardDescription>Accede a tu cuenta para ver pedidos y ofertas</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 text-secondary">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -112,7 +112,7 @@ export default function LoginPage() {
 
         <Button
           variant="outline"
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer text-primary"
           onClick={handleGoogleLogin}
           disabled={loadingGoogle}
         >

@@ -29,19 +29,19 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className="relative z-10 w-full max-w-md px-4 py-12">
         {/* Logo o título arriba (opcional) */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-serif font-bold text-white drop-shadow-lg">
+          <Link href="/" className="text-3xl font-serif font-bold text-primary drop-shadow-lg">
             Florería La Paz
           </Link>
-          <p className="text-white/80 mt-1 text-sm">
+          <p className="text-primary/80 mt-1 text-sm">
             Flores frescas del desierto al corazón
           </p>
         </div>
 
         {/* Card donde irá el form de login/register */}
-        <div className="min-h-fit flex rounded items-center justify-center bg-background p-4">
-            <Card className="w-full max-w-md backdrop-blur-sm bg-white/90 border-white/20 shadow-2xl">
+        <div className="min-h-fit flex items-center justify-center bg-background rounded-2xl p-4">
+          <Card className="w-full max-w-md backdrop-blur-sm bg-foreground/90 border-foreground/20 shadow-2xl">
             {children}
-            </Card>
+          </Card>
         </div>
 
         {/* Footer pequeño */}

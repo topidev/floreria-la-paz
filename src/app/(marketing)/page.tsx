@@ -1,10 +1,18 @@
 // HomePage.tsx
 'use client'
 
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
+
+const ctas_imgs = [
+  { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products/hbd" },
+  { src: "/images/ctas/events.png", alt: "Eventos", title: "Eventos", link: "/events" },
+  { src: "/images/ctas/bottle.png", alt: "Decoradores", title: "Decoradores", link: "products/accessories" },
+  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" }
+]
 
 export default function Home() {
 
@@ -58,63 +66,57 @@ export default function Home() {
         </CarouselContent>
       </Carousel>
 
-      <main className="flex min-h-screen w-full container flex-col items-center justify-center py-32 px-16 text-center">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center mb-6">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      <section className="flex min-h-screen w-full container flex-col items-center justify-start text-center py-20">
+        <div className="flex w-full container flex-col items-center justify-start text-center">
+          <h2 className="relative text-lg md:text-xl lg:text-2xl xl:text-4xl mb-16 p-6">
+            Colecciones del Desierto
+            <span className="absolute bg-primary h-2 w-1/3 bottom-0 left-1/2 rounded -translate-x-1/2"></span>
+          </h2>
+          <div className="flex flex-col w-full md:flex-row justify-between px-4 gap-6 md:gap-4">
+            {ctas_imgs.map((cta) => (
+              <Card
+                key={cta.title}
+                className="py-0 block group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm w-full md:w-1/4 max-w-md mx-auto transition-all duration-300 hover:shadow-lg"
+              >
+                {/* Contenedor de la imagen con aspect-ratio y relative */}
+                <div className="relative aspect-4/5 w-full overflow-hidden md:aspect-3/4">
+                  <Image
+                    src={cta.src}
+                    alt={cta.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    quality={85}
+                    priority={false}
+                  />
+                </div>
+
+                {/* Overlay + contenido que aparece siempre en mobile y en hover en desktop */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                  <Link
+                    href={cta.link}
+                    title={cta.title}
+                    className="py-3 w-1/2 bg-primary text-primary-foreground rounded-full xl:text-lg font-medium shadow-md hover:bg-primary/90 transition-colors"
+                  >
+                    Ver más
+                  </Link>
+                </div>
+
+                {/* Versión siempre visible en mobile */}
+                <div className="md:hidden flex justify-center py-4 border-t bg-card">
+                  <Link
+                    href={cta.link}
+                    title={cta.title}
+                    className="w-1/2 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-sm hover:bg-primary/90 transition-colors"
+                  >
+                    Ver más
+                  </Link>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }
