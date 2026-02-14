@@ -1,11 +1,18 @@
 // HomePage.tsx
 'use client'
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Card, CardFooter } from "@/components/ui/card";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from '@/components/ui/button';
 
 const ctas_imgs = [
   { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products/hbd" },
@@ -13,6 +20,37 @@ const ctas_imgs = [
   { src: "/images/ctas/bottle.png", alt: "Decoradores", title: "Decoradores", link: "products/accessories" },
   { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" }
 ]
+
+const bestSellers = [
+  {
+    title: 'Oasis Rose Box',
+    price: 1250,
+    image: '/images/products/oasis-rose-box.jpg',
+    alt: 'Caja de rosas preservadas Oasis',
+    link: '/products/oasis-rose-box',
+  },
+  {
+    title: 'Desert Sunset',
+    price: 890,
+    image: '/images/products/desert-sunset.jpg',
+    alt: 'Arreglo inspirado en atardecer del desierto',
+    link: '/products/desert-sunset',
+  },
+  {
+    title: 'Minimalist Cactus',
+    price: 650,
+    image: '/images/products/minimalist-cactus.jpg',
+    alt: 'Cactus minimalista en maceta',
+    link: '/products/minimalist-cactus',
+  },
+  {
+    title: 'La Paz Breeze',
+    price: 1400,
+    image: '/images/products/la-paz-breeze.jpg',
+    alt: 'Arreglo marino inspirado en La Paz',
+    link: '/products/la-paz-breeze',
+  },
+];
 
 export default function Home() {
 
@@ -117,6 +155,68 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container px-4 md:px-6">
+          {/* Título y subtítulo */}
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+              Más Vendidos
+            </h2>
+            <p className="mt-2 text-lg text-muted-foreground">
+              Favoritos en La Paz
+            </p>
+          </div>
+
+          {/* Carousel */}
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {bestSellers.map((product) => (
+                <CarouselItem
+                  key={product.title}
+                  className="pl-2 md:pl-4 basis-4/5 md:basis-1/3 lg:basis-1/4"
+                >
+                  <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 bg-card h-full flex flex-col">
+                    <div className="relative aspect-square w-full">
+                      <Image
+                        src={product.image}
+                        alt={product.alt}
+                        fill
+                        className="object-cover transition-transform duration-500 hover:scale-105"
+                        sizes="(max-width: 768px) 80vw, (max-width: 1200px) 40vw, 25vw"
+                        quality={85}
+                      />
+                    </div>
+
+                    <CardFooter className="flex flex-col items-center p-4 pt-5 bg-card border-t">
+                      <h3 className="font-medium text-lg text-center mb-1">
+                        {product.title}
+                      </h3>
+                      <p className="text-primary font-semibold text-xl">
+                        ${product.price.toLocaleString('es-MX')} MXN
+                      </p>
+                      <Button asChild variant="outline" size="sm" className="mt-4 w-full md:w-auto">
+                        <Link href={product.link}>Ver producto</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            {/* Flechas de navegación */}
+            <CarouselPrevious className="left-2 md:left-4 bg-background/80 hover:bg-background border-border" />
+            <CarouselNext className="right-2 md:right-4 bg-background/80 hover:bg-background border-border" />
+          </Carousel>
+        </div>
+      </section>
+
     </div>
   );
 }
