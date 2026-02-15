@@ -112,7 +112,7 @@ export default function LoginPage() {
 
         <Button
           variant="outline"
-          className="w-full cursor-pointer text-primary"
+          className="w-full cursor-pointer text-secondary"
           onClick={handleGoogleLogin}
           disabled={loadingGoogle}
         >

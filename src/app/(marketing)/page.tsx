@@ -17,8 +17,8 @@ import { Button } from '@/components/ui/button';
 const ctas_imgs = [
   { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products/hbd" },
   { src: "/images/ctas/events.png", alt: "Eventos", title: "Eventos", link: "/events" },
-  { src: "/images/ctas/bottle.png", alt: "Decoradores", title: "Decoradores", link: "products/accessories" },
-  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" }
+  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" },
+  { src: "/images/ctas/bottle.png", alt: "Condolencias", title: "Condolencias", link: "products/accessories" }
 ]
 
 const bestSellers = [
@@ -58,6 +58,7 @@ export default function Home() {
   return (
     <div className="w-full flex flex-col min-h-screen items-center justify-center bg-background font-sans ">
 
+      {/* Hero Shot */}
       <Carousel
         className="overflow-hidden w-full"
         plugins={[
@@ -104,50 +105,88 @@ export default function Home() {
         </CarouselContent>
       </Carousel>
 
-      <section className="flex min-h-screen w-full container flex-col items-center justify-start text-center py-20">
-        <div className="flex w-full container flex-col items-center justify-start text-center">
-          <h2 className="relative text-lg md:text-xl lg:text-2xl xl:text-4xl mb-16 p-6">
-            Colecciones del Desierto
-            <span className="absolute bg-primary h-2 w-1/3 bottom-0 left-1/2 rounded -translate-x-1/2"></span>
-          </h2>
-          <div className="flex flex-col w-full md:flex-row justify-between px-4 gap-6 md:gap-4">
+      {/* CTAs */}
+      <section className="w-full py-16 md:py-20 bg-muted/30 flex justify-center">
+        <div className="container px-4 md:px-6">
+          {/* Título */}
+          <div className="text-center mb-10 md:mb-12">
+            <h2 className="relative text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+              Colecciones del Desierto
+            </h2>
+            <p className="mt-3 text-lg text-muted-foreground">
+              Inspiradas en la belleza única de Baja California Sur
+            </p>
+          </div>
+
+          {/* Carousel en mobile, grid en desktop */}
+          <div className="block md:hidden">
+            {/* Versión carousel para mobile */}
+            <Carousel
+              opts={{
+                align: 'center',
+                loop: true,
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {ctas_imgs.map((cta) => (
+                  <CarouselItem key={cta.title} className="pl-2 md:pl-4 basis-[85%]">
+                    <Card className="group relative overflow-hidden rounded-xl border bg-card shadow-sm hover:shadow-md transition-all duration-300 h-full">
+                      <div className="relative aspect-4/5 w-full overflow-hidden">
+                        <Image
+                          src={cta.src}
+                          alt={cta.alt}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="85vw"
+                          quality={85}
+                        />
+                      </div>
+
+                      {/* Botón siempre visible en mobile */}
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end justify-center pb-6 md:hidden">
+                        <Link
+                          href={cta.link}
+                          className="px-8 py-3 tracking-wider bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
+                        >
+                          {cta.title}
+                        </Link>
+                      </div>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 bg-background/80 hover:bg-background border-border" />
+              <CarouselNext className="right-2 bg-background/80 hover:bg-background border-border" />
+            </Carousel>
+          </div>
+
+          {/* Grid en desktop */}
+          <div className="hidden md:grid md:grid-cols-4 gap-6 lg:gap-8">
             {ctas_imgs.map((cta) => (
               <Card
                 key={cta.title}
-                className="py-0 block group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm w-full md:w-1/4 max-w-md mx-auto transition-all duration-300 hover:shadow-lg"
+                className="group relative overflow-hidden rounded-xl border bg-card shadow-sm hover:shadow-xl transition-all duration-300"
               >
-                {/* Contenedor de la imagen con aspect-ratio y relative */}
-                <div className="relative aspect-4/5 w-full overflow-hidden md:aspect-3/4">
+                <div className="relative aspect-3/4 w-full overflow-hidden">
                   <Image
                     src={cta.src}
                     alt={cta.alt}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    sizes="(max-width: 1200px) 25vw, 20vw"
                     quality={85}
-                    priority={false}
                   />
                 </div>
 
-                {/* Overlay + contenido que aparece siempre en mobile y en hover en desktop */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                {/* Overlay + botón en hover (solo desktop) */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
                   <Link
                     href={cta.link}
-                    title={cta.title}
-                    className="py-3 w-1/2 bg-primary text-primary-foreground rounded-full xl:text-lg font-medium shadow-md hover:bg-primary/90 transition-colors"
+                    className="px-8 py-4 tracking-wider bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
                   >
-                    Ver más
-                  </Link>
-                </div>
-
-                {/* Versión siempre visible en mobile */}
-                <div className="md:hidden flex justify-center py-4 border-t bg-card">
-                  <Link
-                    href={cta.link}
-                    title={cta.title}
-                    className="w-1/2 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-sm hover:bg-primary/90 transition-colors"
-                  >
-                    Ver más
+                    {cta.title}
                   </Link>
                 </div>
               </Card>
@@ -156,7 +195,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16 bg-muted/30">
+      {/* Best Sellers */}
+      <section className="w-full flex justify-center py-12 md:py-16 bg-muted/30">
         <div className="container px-4 md:px-6">
           {/* Título y subtítulo */}
           <div className="text-center mb-10">
@@ -171,12 +211,12 @@ export default function Home() {
           {/* Carousel */}
           <Carousel
             opts={{
-              align: 'start',
+              align: 'center',
               loop: true,
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-2 md:-ml-4">
+            <CarouselContent className="-ml-2 md:-ml-4 py-2.5">
               {bestSellers.map((product) => (
                 <CarouselItem
                   key={product.title}
