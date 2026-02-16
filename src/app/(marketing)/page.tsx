@@ -110,7 +110,7 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           {/* Título */}
           <div className="text-center mb-10 md:mb-12">
-            <h2 className="relative text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+            <h2 className="relative text-3xl md:text-4xl font-bold tracking-tight text-foreground">
               Colecciones del Desierto
             </h2>
             <p className="mt-3 text-lg text-muted-foreground">
