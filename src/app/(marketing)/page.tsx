@@ -8,52 +8,42 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Card, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from '@/components/ui/button';
-
-const ctas_imgs = [
-  { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products/hbd" },
-  { src: "/images/ctas/events.png", alt: "Eventos", title: "Eventos", link: "/events" },
-  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" },
-  { src: "/images/ctas/bottle.png", alt: "Condolencias", title: "Condolencias", link: "products/accessories" }
-]
-
-const bestSellers = [
-  {
-    title: 'Oasis Rose Box',
-    price: 1250,
-    image: '/images/products/oasis-rose-box.jpg',
-    alt: 'Caja de rosas preservadas Oasis',
-    link: '/products/oasis-rose-box',
-  },
-  {
-    title: 'Desert Sunset',
-    price: 890,
-    image: '/images/products/desert-sunset.jpg',
-    alt: 'Arreglo inspirado en atardecer del desierto',
-    link: '/products/desert-sunset',
-  },
-  {
-    title: 'Minimalist Cactus',
-    price: 650,
-    image: '/images/products/minimalist-cactus.jpg',
-    alt: 'Cactus minimalista en maceta',
-    link: '/products/minimalist-cactus',
-  },
-  {
-    title: 'La Paz Breeze',
-    price: 1400,
-    image: '/images/products/la-paz-breeze.jpg',
-    alt: 'Arreglo marino inspirado en La Paz',
-    link: '/products/la-paz-breeze',
-  },
-];
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Star } from 'lucide-react';
+import { useState } from 'react';
+import { testimonials, ctas_imgs, bestSellers } from '../../stores/data'
+import { toast } from 'sonner';
 
 export default function Home() {
 
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.includes('@')) {
+      toast.error('Por favor ingresa un email válido');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Aquí iría tu llamada real a Firebase/Mailchimp
+      await new Promise((resolve) => setTimeout(resolve, 1200)); // simulación
+      toast.success('¡Gracias por suscribirte! Revisa tu correo para el 10% de descuento.');
+      setEmail('');
+    } catch (error) {
+      toast.error('Hubo un error al suscribirte. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full flex flex-col min-h-screen items-center justify-center bg-background font-sans ">
@@ -126,6 +116,7 @@ export default function Home() {
                 align: 'center',
                 loop: true,
                 dragFree: true,
+                slidesToScroll: 1
               }}
               className="w-full"
             >
@@ -213,6 +204,7 @@ export default function Home() {
             opts={{
               align: 'center',
               loop: true,
+              slidesToScroll: 1
             }}
             className="w-full"
           >
@@ -254,6 +246,105 @@ export default function Home() {
             <CarouselPrevious className="left-2 md:left-4 bg-background/80 hover:bg-background border-border" />
             <CarouselNext className="right-2 md:right-4 bg-background/80 hover:bg-background border-border" />
           </Carousel>
+        </div>
+      </section>
+
+      {/** Testimonials */}
+      <section className="w-full flex justify-center py-12 md:py-16 bg-muted/20">
+        <div className="container px-4 md:px-6">
+          {/* Título */}
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+              Historias de Nuestros Clientes
+            </h2>
+            <p className="mt-3 text-lg md:text-xl text-muted-foreground">
+              Haciendo momentos inolvidables en Baja Sur
+            </p>
+          </div>
+
+          {/* Testimonios – Carousel en mobile, grid en desktop */}
+          <div className="block md:hidden">
+            <Carousel
+              opts={{
+                align: 'center',
+                loop: true,
+                dragFree: true,
+                slidesToScroll: 1
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {testimonials.map((t) => (
+                  <CarouselItem key={t.name} className="pl-4 basis-[90%]">
+                    <Card className="h-full border-border bg-card shadow-sm">
+                      <CardContent className="p-6 flex flex-col items-center text-center">
+                        <div className="flex mb-4">
+                          {Array.from({ length: t.rating }).map((_, i) => (
+                            <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                          ))}
+                        </div>
+                        <p className="text-lg italic mb-6 text-muted-foreground">"{t.text}"</p>
+                        <Avatar className="h-12 w-12 mb-3 bg-primary/10">
+                          <AvatarFallback className="text-primary font-medium">
+                            {t.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="font-medium">{t.name}</p>
+                        <p className="text-sm text-muted-foreground">{t.role}</p>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
+          {/* Grid en desktop */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
+            {testimonials.map((t) => (
+              <Card key={t.name} className="border-border bg-card shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="flex mb-4">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                    ))}
+                  </div>
+                  <p className="text-lg italic mb-6 text-muted-foreground">"{t.text}"</p>
+                  <Avatar className="h-12 w-12 mb-3 bg-primary/10">
+                    <AvatarFallback className="text-primary font-medium">
+                      {t.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className="font-medium">{t.name}</p>
+                  <p className="text-sm text-muted-foreground">{t.role}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Newsletter CTA */}
+          <div className="mt-16 md:mt-20 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Recibe un 10% de descuento
+            </h3>
+            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Suscríbete a nuestro boletín y mantente al tanto de nuestras colecciones exclusivas de temporada, promociones y entregas especiales en La Paz.
+            </p>
+
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <Input
+                type="email"
+                placeholder="Tu correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1"
+              />
+              <Button type="submit" disabled={loading} className="min-w-35 cursor-pointer">
+                {loading ? 'Suscribiendo...' : 'Suscribirme'}
+              </Button>
+            </form>
+          </div>
         </div>
       </section>
 
