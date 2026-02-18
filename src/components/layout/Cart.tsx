@@ -72,7 +72,7 @@ const MiniCart = () => {
           <Button className="w-full mt-4" asChild>
             <Link href="/cart">Ver carrito completo</Link>
           </Button>
-          <Button variant="default" className="w-full mt-2">
+          <Button variant="default" className="cursor-pointer w-full mt-2">
             Proceder al pago
           </Button>
         </div>

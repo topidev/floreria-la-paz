@@ -175,7 +175,11 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
                   <Link
                     href={cta.link}
-                    className="px-8 py-4 tracking-wider bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
+                    className="
+                      p-3
+                      tracking-wider 
+                      text-sm lg:text-lg xl:text-lg
+                      bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
                   >
                     {cta.title}
                   </Link>
@@ -208,19 +212,22 @@ export default function Home() {
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-2 md:-ml-4 py-2.5">
+            <CarouselContent className="-ml-2 md:-ml-4 py-2.5 px-1">
               {bestSellers.map((product) => (
                 <CarouselItem
                   key={product.title}
                   className="pl-2 md:pl-4 basis-4/5 md:basis-1/3 lg:basis-1/4"
                 >
-                  <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 bg-card h-full flex flex-col">
+                  <Card className="
+                    shadow-sm dark:shadow-accent/30 px-2 group overflow-hidden border-none dark:hover:shadow-accent/70 transition-shadow duration-300 bg-card h-full flex flex-col
+                    shadow-foreground/30 hover:shadow-foreground/70
+                  ">
                     <div className="relative aspect-square w-full">
                       <Image
                         src={product.image}
                         alt={product.alt}
                         fill
-                        className="object-cover transition-transform duration-500 hover:scale-105"
+                        className="object-cover rounded transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 80vw, (max-width: 1200px) 40vw, 25vw"
                         quality={85}
                       />
