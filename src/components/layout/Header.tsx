@@ -15,6 +15,7 @@ import { useAuth } from '../../context/AuthContext';
 import { ShoppingCart, LogIn, LogOut, User, Moon, Package, Sun, History, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import MiniCart from './Cart';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -62,10 +63,7 @@ export default function Header() {
         {/* Acciones derecha */}
         <div className="flex items-center space-x-4">
           {/* Carrito (placeholder) */}
-          <Button variant="ghost" className='cursor-pointer' size="icon">
-            <ShoppingCart className="h-5 w-5" />
-            <span className="sr-only">Carrito</span>
-          </Button>
+          <MiniCart />
 
           {/* Menú de usuario */}
           <DropdownMenu>

@@ -20,7 +20,26 @@ export interface UserData {
 }
 
 
+/* --------------------------------
+          CartStore.ts
+-------------------------------- */
+export interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
 
+export interface CartStore {
+  items: CartItem[];
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
+  total: () => number;
+  itemCount: () => number;
+}
 
 /* --------------------------------
            AuthContext.ts
