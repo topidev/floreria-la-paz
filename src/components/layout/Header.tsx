@@ -16,6 +16,7 @@ import { ShoppingCart, LogIn, LogOut, User, Moon, Package, Sun, History, Heart }
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import MiniCart from './Cart';
+import MobileNav from './MobileNav';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -39,14 +40,21 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container  flex h-16 items-center justify-between m-auto py-1.5 px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2" title='Desert Bloom'>
-          <span className="text-lg sm:text-xl lg:text-2xl font-serif font-bold text-primary">Florería La Paz</span>
-        </Link>
+        <div className='flex w-full items-center md:w-auto'>
+          {/* Mobile Nav */}
+          <div className='md:hidden'>
+            <MobileNav />
+          </div>
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2" title='Desert Bloom'>
+            <span className="text-lg sm:text-xl lg:text-2xl font-serif font-bold text-primary">Florería La Paz</span>
+          </Link>
+
+        </div>
 
         {/* Navegación central */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/products" title='Products' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
+          <Link href="/products" title='Productos' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">
             Catálogo
           </Link>
           <Link href="/ocasiones" title='Ocasiones' className="text-sm xl:text-[16px] font-medium transition-colors hover:text-primary">

@@ -16,11 +16,21 @@ const MiniCart = () => {
     setIsMounted(true)
   }, [])
 
+  if (!isMounted) {
+    // Render neutro que coincida con SSR (sin Sheet ni Dropdown internals)
+    return (
+      <Button variant="ghost" size="icon" className="relative">
+        <ShoppingCart className="h-5 w-5 size-5" />
+        {/* Badge si aplica, pero sin aria-controls ni ids dinámicos */}
+      </Button>
+    )
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="cursor-pointer relative">
-          <ShoppingCart className="h-5 w-5" />
+          <ShoppingCart className="h-5 w-5 size-5" />
           {isMounted && itemCount() > 0 && (
             <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
               {itemCount()}

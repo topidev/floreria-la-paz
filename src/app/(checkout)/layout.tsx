@@ -14,7 +14,7 @@ export default function CheckoutLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-muted/20">
       {/* Barra superior mínima */}
       <div className="border-b bg-background sticky top-0 z-50">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="mx-auto container flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-serif font-bold text-primary">Florería La Paz</span>
           </Link>

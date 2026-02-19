@@ -56,3 +56,20 @@ export const bestSellers = [
     link: '/products/la-paz-breeze',
   },
 ];
+
+
+export const mobileNav = [
+  { href: '/products', label: 'Catálogo' },
+  { href: '/ocasiones', label: 'Ocasiones' },
+  { href: '/suscripciones', label: 'Suscripciones' },
+  { href: '/contactus', label: 'Contact Us' },
+]
+
+
+export const mobileCats = [
+  { href: '/products?category=ramos', label: 'Ramos' },
+  { href: '/products?category=bodas', label: 'Bodas' },
+  { href: '/products?category=cumpleanos', label: 'Cumpleaños' },
+  { href: '/products?category=san-valentin', label: 'San Valentin' },
+  { href: '/products?category=condolencias', label: 'Condolencias' },
+]
