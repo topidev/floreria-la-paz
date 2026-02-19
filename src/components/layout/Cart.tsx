@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const MiniCart = () => {
   const { items, itemCount, total, removeItem, updateQuantity } = useCartStore();
-
+  console.log("Objetos del carrito: ", items)
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -28,7 +28,7 @@ const MiniCart = () => {
           <SheetTitle>Tu carrito ({itemCount()} items)</SheetTitle>
         </SheetHeader>
 
-        <ScrollArea className="h-[70vh] mt-6 pr-4">
+        <ScrollArea className="h-[70vh] mt-6 px-4">
           {items.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               Tu carrito está vacío
@@ -36,9 +36,9 @@ const MiniCart = () => {
           ) : (
             <div className="space-y-6">
               {items.map((item) => (
-                <div key={item.id} className="flex gap-4">
+                <div key={item._id} className="flex gap-4">
                   <div className="relative h-20 w-20 shrink-0">
-                    <Image src={item.image} alt={item.title} fill className="object-cover rounded" />
+                    <Image src={item.images[0].asset.url} alt={item.title} fill className="object-cover rounded" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium">{item.title}</h4>
@@ -46,16 +46,16 @@ const MiniCart = () => {
                       ${item.price.toLocaleString('es-MX')} × {item.quantity}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>
+                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
                         -
                       </Button>
                       <span className="w-8 text-center">{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
                         +
                       </Button>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)}>
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(item._id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

@@ -34,9 +34,9 @@ export default function CartPage() {
         {/* Lista de items */}
         <div className="md:col-span-2 space-y-6">
           {items.map((item) => (
-            <div key={item.id} className="flex gap-6 border-b pb-6">
+            <div key={item._id} className="flex gap-6 border-b pb-6">
               <div className="relative h-32 w-32 shrink-0">
-                <Image src={item.image} alt={item.title} fill className="object-cover rounded" />
+                <Image src={item.images[0].asset.url} alt={item.title} fill className="object-cover rounded" />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-xl">{item.title}</h3>
@@ -45,15 +45,15 @@ export default function CartPage() {
                 </p>
                 <div className="flex items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
-                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}>
+                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
                       -
                     </Button>
                     <span className="px-4 py-2">{item.quantity}</span>
-                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
                       +
                     </Button>
                   </div>
-                  <Button variant="ghost" className="text-destructive" onClick={() => removeItem(item.id)}>
+                  <Button variant="ghost" className="text-destructive" onClick={() => removeItem(item._id)}>
                     Eliminar
                   </Button>
                 </div>

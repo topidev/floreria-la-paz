@@ -23,12 +23,13 @@ export interface UserData {
 /* --------------------------------
           CartStore.ts
 -------------------------------- */
+
 export interface CartItem {
-  id: string;
+  _id: string;
   title: string;
   price: number;
   quantity: number;
-  image: string;
+  images: any[];
 }
 
 export interface CartStore {

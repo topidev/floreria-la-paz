@@ -21,7 +21,7 @@ export default function CheckoutLayout({ children }: { children: ReactNode }) {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {!isMobile ? 'Continuar comprando' : ''}
+              {!isMobile ? 'Seguir comprando' : ''}
               
             </Link>
           </Button>

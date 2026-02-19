@@ -9,11 +9,13 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       addItem: (item) => {
-        const existing = get().items.find(i => i.id === item.id);
+        console.log(item)
+        const existing = get().items.some(i => i._id === item._id);
+        console.log("Ya está?: ", existing)
         if (existing) {
           set({
             items: get().items.map(i =>
-              i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+              i._id === item._id ? {  ...i, quantity: i.quantity + item.quantity } : i
             ),
           });
         } else {
@@ -21,10 +23,10 @@ export const useCartStore = create<CartStore>()(
         }
         toast.success('Producto agregado al carrito');
       },
-      removeItem: (id) => set({ items: get().items.filter(i => i.id !== id) }),
-      updateQuantity: (id, quantity) =>
+      removeItem: (_id) => set({ items: get().items.filter(i => i._id !== _id) }),
+      updateQuantity: (_id, quantity) =>
         set({
-          items: get().items.map(i => (i.id === id ? { ...i, quantity } : i)),
+          items: get().items.map(i => (i._id === _id ? { ...i, quantity } : i)),
         }),
       clearCart: () => set({ items: [] }),
       total: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),

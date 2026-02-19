@@ -19,11 +19,21 @@ import { Star } from 'lucide-react';
 import { useState } from 'react';
 import { testimonials, ctas_imgs, bestSellers } from '../../stores/data'
 import { toast } from 'sonner';
+import { client } from '@/src/sanity/client';
+import { SanityDocument } from 'next-sanity';
+
+const POSTS_QUERY = `*[
+  _type == "product"
+  && defined(slug.current)
+]|order(publishedAt desc)[0...12]{_id, title, slug, publishedAt}`;
+
+const options = { next: { revalidate: 30 } };
 
 export default function Home() {
 
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false);
+
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +54,8 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  // const posts = await client.fetch<SanityDocument[]>(POSTS_QUERY, {}, options);
 
   return (
     <div className="w-full flex flex-col min-h-screen items-center justify-center bg-background font-sans ">
@@ -74,7 +86,7 @@ export default function Home() {
                   fill
                   className="object-cover"
                   priority={index === 0}
-                  quality={90}
+                  quality={85}
                   sizes="100vw"
                 />
 
@@ -354,6 +366,20 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* <section className="w-full flex justify-center py-12 md:py-16 bg-muted/20">
+        <h1 className="text-4xl font-bold mb-8">Posts</h1>
+        <ul className="flex flex-col gap-y-4">
+          {posts.map((post) => (
+            <li className="hover:underline" key={post._id}>
+              <Link href={`/${post.slug.current}`}>
+                <h2 className="text-xl font-semibold">{post.title}</h2>
+                <p>{new Date(post.publishedAt).toLocaleDateString()}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>      */}
 
     </div>
   );
