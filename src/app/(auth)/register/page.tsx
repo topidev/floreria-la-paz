@@ -12,6 +12,8 @@ import { Eye, EyeOff } from 'lucide-react'; // instala lucide-react si no lo tie
 import { registerSchema } from '../../../lib/validation';
 import { useState } from 'react';
 import { useAuth } from '@/src/context/AuthContext';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
@@ -20,6 +22,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
   const { signUpWithEmail } = useAuth()
+  const router = useRouter()
 
   const {
     register,
@@ -38,6 +41,7 @@ export default function RegisterPage() {
     try {
 
       await signUpWithEmail(data.email, data.password, data.name)
+      router.push('/login')
 
     } catch (error: unknown) {
 

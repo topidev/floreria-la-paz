@@ -11,12 +11,14 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import { Eye, EyeOff } from 'lucide-react';
 import { loginSchema, LoginForm } from '../../../lib/validation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const { signInWithGoogle, signInWithEmail, loading: authLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false)
+  const router = useRouter()
 
   const {
     register,
@@ -32,6 +34,7 @@ export default function LoginPage() {
     try {
 
       await signInWithEmail(data.email, data.password)
+      router.push('/')
 
     } catch (error: unknown) {
 
@@ -47,6 +50,7 @@ export default function LoginPage() {
     try {
 
       await signInWithGoogle();
+      router.push('/')
 
     } catch (error: unknown) {
 

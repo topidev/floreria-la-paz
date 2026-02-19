@@ -21,15 +21,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
-
-
-      if (user) {
-        toast.success('¡Bienvenido!');
-        router.push('/')
-      }
     });
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const signInWithGoogle = async () => {
     try {

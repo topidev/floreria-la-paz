@@ -6,16 +6,22 @@ import { useCartStore } from '../../store/cartStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const MiniCart = () => {
   const { items, itemCount, total, removeItem, updateQuantity } = useCartStore();
-  console.log("Objetos del carrito: ", items)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="cursor-pointer relative">
           <ShoppingCart className="h-5 w-5" />
-          {itemCount() > 0 && (
+          {isMounted && itemCount() > 0 && (
             <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
               {itemCount()}
             </span>
