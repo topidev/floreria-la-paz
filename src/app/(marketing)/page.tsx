@@ -302,7 +302,7 @@ export default function Home() {
                             <Star key={i} className="h-5 w-5 fill-primary text-primary" />
                           ))}
                         </div>
-                        <p className="text-lg italic mb-6 text-muted-foreground">"{t.text}"</p>
+                        <p className="text-lg italic mb-6 text-muted-foreground">&quot;{t.text}&quot;</p>
                         <Avatar className="h-12 w-12 mb-3 bg-primary/10">
                           <AvatarFallback className="text-primary font-medium">
                             {t.name.split(' ').map(n => n[0]).join('')}
@@ -328,7 +328,7 @@ export default function Home() {
                       <Star key={i} className="h-5 w-5 fill-primary text-primary" />
                     ))}
                   </div>
-                  <p className="text-lg italic mb-6 text-muted-foreground">"{t.text}"</p>
+                  <p className="text-lg italic mb-6 text-muted-foreground">&quot;{t.text}&quot;</p>
                   <Avatar className="h-12 w-12 mb-3 bg-primary/10">
                     <AvatarFallback className="text-primary font-medium">
                       {t.name.split(' ').map(n => n[0]).join('')}
