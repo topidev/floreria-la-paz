@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
       //   hostname: 'res.cloudinary.com',
       // },
     ],
-    domains: ['cdn.sanity.io'],
     qualities: [25, 75, 85]
   },
 };
