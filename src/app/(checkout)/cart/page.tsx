@@ -52,15 +52,15 @@ export default function CartPage() {
                 </p>
                 <div className="flex items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
-                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
+                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
                       -
                     </Button>
                     <span className="px-4 py-2">{item.quantity}</span>
-                    <Button variant="ghost" size="icon" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
                       +
                     </Button>
                   </div>
-                  <Button variant="ghost" className="text-destructive" onClick={() => removeItem(item._id)}>
+                  <Button variant="ghost" className="text-primary-foreground bg-destructive cursor-pointer" onClick={() => removeItem(item._id)}>
                     Eliminar
                   </Button>
                 </div>
@@ -87,7 +87,7 @@ export default function CartPage() {
                 <span>${total.toLocaleString('es-MX')} MXN</span>
               </div>
             </div>
-            <Button className="w-full mt-5" size="lg">
+            <Button className="w-full mt-5 cursor-pointer" title='Proceder al pago' size="lg">
               Proceder al pago
             </Button>
           </Card>

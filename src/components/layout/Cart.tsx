@@ -50,7 +50,7 @@ const MiniCart = () => {
           ) : (
             <div className="space-y-6">
               {items.map((item) => (
-                <div key={item._id} className="flex gap-4">
+                <div key={item._id} className="flex items-center gap-4">
                   <div className="relative h-20 w-20 shrink-0">
                     <Image
                       src={item.thumbnail?.asset?.url ?? '/placeholder.png'}
@@ -66,16 +66,16 @@ const MiniCart = () => {
                       ${item.price.toLocaleString('es-MX')} × {item.quantity}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
+                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
                         -
                       </Button>
                       <span className="w-8 text-center">{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
                         +
                       </Button>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(item._id)}>
+                  <Button className=' cursor-pointer shadow-xs shadow-accent-foreground/50' variant="ghost" size="icon" onClick={() => removeItem(item._id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -89,10 +89,10 @@ const MiniCart = () => {
             <span>Total</span>
             <span>${total.toLocaleString('es-MX')} MXN</span>
           </div>
-          <Button className="w-full mt-4" asChild>
+          <Button className="w-full mt-4 text-secondary" asChild>
             <Link href="/cart">Ver carrito completo</Link>
           </Button>
-          <Button variant="default" className="cursor-pointer w-full mt-2">
+          <Button variant="default" className="cursor-pointer w-full mt-2 text-secondary">
             Proceder al pago
           </Button>
         </div>

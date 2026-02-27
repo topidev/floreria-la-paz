@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
-import CarHydrator from '@/src/components/layout/cart-hydrator';
+import CarHydrator from '@/components/layout/cart-hydrator';
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (

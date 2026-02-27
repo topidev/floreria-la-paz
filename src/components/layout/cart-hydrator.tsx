@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from "react"
-import { useCartStore } from "@/src/store/cartStore"
+import { useCartStore } from "@/store/cartStore"
 
 export default function CarHydrator() {
 

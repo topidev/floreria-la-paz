@@ -19,7 +19,7 @@ import { Star } from 'lucide-react';
 import { useState } from 'react';
 import { testimonials, ctas_imgs, bestSellers } from '../../stores/data'
 import { toast } from 'sonner';
-import { client } from '@/src/sanity/client';
+import { client } from '@/sanity/client';
 import { SanityDocument } from 'next-sanity';
 
 const POSTS_QUERY = `*[
@@ -151,7 +151,7 @@ export default function Home() {
                       <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end justify-center pb-6 md:hidden">
                         <Link
                           href={cta.link}
-                          className="px-8 py-3 tracking-wider bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
+                          className="px-8 py-3 tracking-wider bg-primary text-primary-foreground rounded font-medium shadow-lg hover:bg-primary/90 transition-colors"
                         >
                           {cta.title}
                         </Link>
@@ -191,7 +191,7 @@ export default function Home() {
                       p-3
                       tracking-wider 
                       text-sm lg:text-lg xl:text-lg
-                      bg-primary text-primary-foreground rounded-full font-medium shadow-lg hover:bg-primary/90 transition-colors"
+                      bg-primary text-primary-foreground rounded-md font-medium shadow-lg hover:bg-primary/90 transition-colors"
                   >
                     {cta.title}
                   </Link>
@@ -239,7 +239,7 @@ export default function Home() {
                         src={product.image}
                         alt={product.alt}
                         fill
-                        className="object-cover rounded transition-transform duration-500 group-hover:scale-105"
+                        className="object-cover rounded transition-all duration-500 group-hover:scale-105 group-hover:rounded-none"
                         sizes="(max-width: 768px) 80vw, (max-width: 1200px) 40vw, 25vw"
                         quality={85}
                       />

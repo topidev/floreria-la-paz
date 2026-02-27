@@ -3,7 +3,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { client } from '@/src/sanity/client';
+import { client } from '@/sanity/client';
 import { allProductsQuery } from '../../../sanity/helpers';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,11 +11,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
-import AddToCartButton from '@/src/components/AddToCartButton';
+import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useDebounce } from 'use-debounce'
+import { useEffect, useMemo, useState } from 'react';
+import { Input } from '@/components/ui/input';
 
 export default function ProductsPage() {
+
+  const [inputValue, setInputValue] = useState('')
+  const [debounceSearch] = useDebounce(inputValue.toLocaleLowerCase(), 300)
+
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
@@ -30,15 +36,29 @@ export default function ProductsPage() {
     },
   });
 
+  const filteredProducts = useMemo(() => {
+    let filtered = products
+    if (debounceSearch.trim() !== '') {
+      const query = debounceSearch.toLocaleLowerCase()
+      filtered = products.filter((p: any) =>
+        p.title.toLowerCase().includes(query)
+        // p.occasions?.map((elem: string) => elem.toLowerCase()).includes(query) ||
+        // p.categories?.find((item: any) => item.title.toLowerCase() === query)
+      )
+    }
+    return filtered
+  }, [products, debounceSearch])
+
   useEffect(() => {
     console.log(products)
   }, [products])
+
 
   if (isLoading) {
     return (
       <section className="flex justify-center w-full py-12 md:py-16 bg-background">
         <div className="container px-4 md:px-6">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8">Catálogo</h1>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl  mb-8">Catálogo</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <Card key={i} className="overflow-hidden">
@@ -59,11 +79,22 @@ export default function ProductsPage() {
   return (
     <section className="py-12 md:py-16 bg-background">
       <div className="container m-auto px-4 md:px-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">Catálogo</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl  text-center mb-8">Catálogo</h1>
+
+        <Input
+          type='text'
+          value={inputValue}
+          name='inputFindSet'
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder='Busca tu arreglo ideal (ej. Rosas, Orquideas...)'
+          className='h-12 w-full block mb-8 p-3 md:text-lg lg:h-16'
+          onBlur={() => setInputValue('')}
+        />
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product: any) => (
+          {filteredProducts.map((product: any) => (
             <Card key={product._id} className="overflow-hidden hover:shadow-md transition-shadow p-0">
-              <CardContent className="p-0 relative aspect-4/4">
+              <CardContent className="p-0 relative aspect-5/4 md:aspect-4/4">
                 <Image
                   src={product.thumbnail.asset.url}
                   alt={product.title}
@@ -74,7 +105,7 @@ export default function ProductsPage() {
                   quality={75}
                 />
                 {product.isOnSale && (
-                  <Badge className="absolute top-2 left-2 bg-destructive">Oferta</Badge>
+                  <Badge className="absolute top-2 left-2 text-md bg-destructive">Oferta</Badge>
                 )}
                 <Button
                   className='cursor-pointer p-0 duration-250 group absolute top-2 right-2 bg-primary-foreground rounded transition-colors'
@@ -84,15 +115,15 @@ export default function ProductsPage() {
                   />
                 </Button>
               </CardContent>
-              <CardFooter className="flex flex-col p-4 items-center">
-                <h3 className="text-lg lg:text-xl xl:text-2xl text-center font-medium mb-1">{product.title}</h3>
+              <CardFooter className="flex flex-col p-4 items-center md:items-start">
+                <h3 className="text-lg lg:text-xl xl:text-2xl text-center md:text-left font-medium mb-1">{product.title}</h3>
                 <div className="w-full md:mt-2 flex flex-col items-center md:flex-row justify-between">
                   <p className="text-primary mb-2 text-lg md:mb-0 md:text-lg font-bold">
                     ${product.isOnSale ? product.salePrice : product.price} MXN
                   </p>
                   <AddToCartButton product={product} />
                 </div>
-                <Button asChild variant="outline" className="mt-6 w-full">
+                <Button asChild variant="outline" className="mt-6 w-full text-md">
                   <Link href={`/product/${product.slug}`}>Ver detalles</Link>
                 </Button>
               </CardFooter>

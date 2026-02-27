@@ -1,4 +1,1 @@
 # .vercelignore
-sanity/
-sanity.config.ts     
-sanity.cli.ts        

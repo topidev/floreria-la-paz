@@ -1,9 +1,9 @@
 // Product Details
 // src/app/product/[slug]/page.tsx
 import { notFound } from 'next/navigation';
-import { client } from '../../../sanity/client';
-import { urlFor } from '@/src/sanity/helpers';
-import { productBySlugQuery } from '@/src/sanity/helpers';
+import { client } from '@/sanity/client';
+import { urlFor } from '@/sanity/helpers';
+import { productBySlugQuery } from '@/sanity/helpers';
 
 import Image from 'next/image';
 import AddToCartButton from '../../../../components/AddToCartButton'; // este sí puede ser 'use client'
@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const mainImage = product.images?.find((img: any) => img.isMain) || product.images?.[0];
   return (
     <section className="py-12 md:py-16 bg-background">
-      <div className="container px-4 md:px-6">
+      <div className="container m-auto px-4 md:px-6">
         <div className="grid md:grid-cols-2 gap-12">
           {/* Galería de imágenes */}
           <div className="space-y-4">

@@ -11,7 +11,7 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import { Eye, EyeOff } from 'lucide-react'; // instala lucide-react si no lo tienes: pnpm add lucide-react
 import { registerSchema } from '../../../lib/validation';
 import { useState } from 'react';
-import { useAuth } from '@/src/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 

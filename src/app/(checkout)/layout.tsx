@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { useIsMobile } from '@/src/hooks/useMediaQuery';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 export default function CheckoutLayout({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile()

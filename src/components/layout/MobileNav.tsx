@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { mobileCats, mobileNav } from '@/src/stores/data';
+import { mobileCats, mobileNav } from '@/stores/data';
 
 export default function MobileNav() {
     return (
@@ -16,8 +16,8 @@ export default function MobileNav() {
             </SheetTrigger>
             <SheetContent side="left" className='w-full max-w-75 sm:max-w-sm pt-8'>
                 <SheetHeader>
-                    <SheetTitle className='text-4lx'> 
-                        Explora <br/> <b>DessertBloom</b>
+                    <SheetTitle className='text-4lx'>
+                        Explora <br /> <b>DessertBloom</b>
                     </SheetTitle>
                 </SheetHeader>
                 <hr />
@@ -26,10 +26,10 @@ export default function MobileNav() {
                         {
                             mobileNav.map(link => (
                                 <li key={link.href} className="mb-2 w-full">
-                                        <SheetClose asChild>
-                                        <Link 
-                                            href={link.href} 
-                                            title={link.label} 
+                                    <SheetClose asChild>
+                                        <Link
+                                            href={link.href}
+                                            title={link.label}
                                             className='text-[16px] sm:text-lg'>
                                             {link.label}
                                         </Link>
@@ -49,10 +49,10 @@ export default function MobileNav() {
                         {
                             mobileCats.map(link => (
                                 <li key={link.href} className="mb-2 w-full">
-                                        <SheetClose asChild>
-                                        <Link 
-                                            href={link.href} 
-                                            title={link.label} 
+                                    <SheetClose asChild>
+                                        <Link
+                                            href={link.href}
+                                            title={link.label}
                                             className='text-[16px] sm:text-lg'>
                                             {link.label}
                                         </Link>

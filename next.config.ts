@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
   //     // Mapea exactamente como en tsconfig "paths"
   //     '@src/*': './src/*',
   //     // O si usas solo '@/sanity/*' → ajusta según tu tsconfig
-  //     '@/src/sanity/*': './src/sanity/*',
+  //     '@/sanity/*': './src/sanity/*',
   //     // Si tu alias es '@/*': ['./src/*'] entonces:
   //     '@/*': './src/*',
   //   },
