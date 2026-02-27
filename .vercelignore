@@ -1,0 +1,4 @@
+# .vercelignore
+sanity/
+sanity.config.ts     # o sanity.config.js si lo tienes así
+sanity.cli.ts        # o sanity.cli.js
