@@ -1,5 +1,5 @@
 // src/app/(checkout)/layout.tsx
-'use client' 
+'use client'
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useIsMobile } from '@/src/hooks/useMediaQuery';
 
 export default function CheckoutLayout({ children }: { children: ReactNode }) {
-    const isMobile = useIsMobile()
+  const isMobile = useIsMobile()
 
   return (
     <div className="min-h-screen bg-muted/20">
@@ -19,10 +19,10 @@ export default function CheckoutLayout({ children }: { children: ReactNode }) {
             <span className="text-xl font-serif font-bold text-primary">Florería La Paz</span>
           </Link>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/">
+            <Link href="/products">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {!isMobile ? 'Seguir comprando' : ''}
-              
+
             </Link>
           </Button>
         </div>

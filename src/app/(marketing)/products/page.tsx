@@ -60,7 +60,7 @@ export default function ProductsPage() {
     <section className="py-12 md:py-16 bg-background">
       <div className="container m-auto px-4 md:px-6">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">Catálogo</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product: any) => (
             <Card key={product._id} className="overflow-hidden hover:shadow-md transition-shadow p-0">
               <CardContent className="p-0 relative aspect-4/4">
@@ -85,9 +85,9 @@ export default function ProductsPage() {
                 </Button>
               </CardContent>
               <CardFooter className="flex flex-col p-4 items-center">
-                <h3 className="text-lg lg:text-2xl font-medium mb-1">{product.title}</h3>
+                <h3 className="text-lg lg:text-xl xl:text-2xl text-center font-medium mb-1">{product.title}</h3>
                 <div className="w-full md:mt-2 flex flex-col items-center md:flex-row justify-between">
-                  <p className="text-primary mb-2 text-lg md:mb-0 md:text-xl font-bold">
+                  <p className="text-primary mb-2 text-lg md:mb-0 md:text-lg font-bold">
                     ${product.isOnSale ? product.salePrice : product.price} MXN
                   </p>
                   <AddToCartButton product={product} />
