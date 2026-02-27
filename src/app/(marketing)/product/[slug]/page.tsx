@@ -1,8 +1,8 @@
 // Product Details
 // src/app/product/[slug]/page.tsx
 import { notFound } from 'next/navigation';
-import { client } from '../../../../sanity/client';
-import { urlFor } from '../../../../sanity/helpers';
+import { client } from '../../../sanity/client';
+import { urlFor } from '@/src/sanity/helpers';
 import { productBySlugQuery } from '@/src/sanity/helpers';
 
 import Image from 'next/image';
