@@ -32,7 +32,7 @@ export interface CartItem {
   thumbnail: {
     alt: string,
     asset: {
-      metada: {
+      metadata: {
         lqip: string,
       },
       url: string,

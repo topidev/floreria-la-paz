@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { Heart } from 'lucide-react';
 import AddToCartButton from '@/src/components/AddToCartButton';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function ProductsPage() {
   const { data: products, isLoading } = useQuery({
@@ -28,6 +29,10 @@ export default function ProductsPage() {
       }
     },
   });
+
+  useEffect(() => {
+    console.log(products)
+  }, [products])
 
   if (isLoading) {
     return (
@@ -64,6 +69,7 @@ export default function ProductsPage() {
                   alt={product.title}
                   fill
                   className="object-cover"
+                  blurDataURL={product.thumbnail.asset.metadata.lqip}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   quality={75}
                 />

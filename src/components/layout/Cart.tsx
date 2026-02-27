@@ -53,10 +53,11 @@ const MiniCart = () => {
                 <div key={item._id} className="flex gap-4">
                   <div className="relative h-20 w-20 shrink-0">
                     <Image
-                      src={item.thumbnail.asset.url}
+                      src={item.thumbnail?.asset?.url ?? '/placeholder.png'}
                       alt={item.title}
                       fill
                       className="object-cover rounded"
+                      blurDataURL={item.thumbnail.asset.metadata.lqip}
                     />
                   </div>
                   <div className="flex-1">
