@@ -5,9 +5,9 @@ import { createImageUrlBuilder } from '@sanity/image-url';
 // Builder para imágenes optimizadas
 const builder = createImageUrlBuilder(client);
 
-// export function urlFor(source: any) {
-//   return builder.image(source).auto('format').fit('max');
-// }
+export function urlFor(source: any) {
+  return builder.image(source).auto('format').fit('max');
+}
 
 // Query para todos los productos (para catálogo)
 export const allProductsQuery = `*[_type == "product"] | order(_createdAt desc) {

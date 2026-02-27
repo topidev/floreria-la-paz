@@ -8,19 +8,19 @@ import Image from 'next/image';
 import AddToCartButton from '../../../../components/AddToCartButton'; // este sí puede ser 'use client'
 import { Badge } from '@/components/ui/badge';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const product = await client.fetch(productBySlugQuery, { slug });
-  if (!product) return { title: 'Producto no encontrado' };
+// export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+//   const { slug } = await params
+//   const product = await client.fetch(productBySlugQuery, { slug });
+//   if (!product) return { title: 'Producto no encontrado' };
 
-  return {
-    title: product.title,
-    description: product.seoDescription || product.description?.[0]?.children?.[0]?.text || '',
-    openGraph: {
-      images: product.mainImage ? urlFor(product.mainImage).width(1200).url() : null,
-    },
-  };
-}
+//   return {
+//     title: product.title,
+//     description: product.seoDescription || product.description?.[0]?.children?.[0]?.text || '',
+//     openGraph: {
+//       images: product.mainImage ? product.thumbnail.asset.url : null,
+//     },
+//   };
+// }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

@@ -10,7 +10,7 @@ export default function AddToCartButton({ product }: { product: any }) {
     return (
         <Button
             size="lg"
-            className="w-full md:w-auto"
+            className="w-full md:w-auto text-secondary cursor-pointer shadow-accent shadow-xs"
             onClick={() => addItem({ ...product, quantity: 1 })}
             disabled={product.stock <= 0}
         >
