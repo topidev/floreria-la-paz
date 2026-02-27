@@ -19,7 +19,7 @@ import { Star } from 'lucide-react';
 import { useState } from 'react';
 import { testimonials, ctas_imgs, bestSellers } from '../../stores/data'
 import { toast } from 'sonner';
-import { client } from '@/sanity/client';
+import { client } from '@/studio/client';
 import { SanityDocument } from 'next-sanity';
 
 const POSTS_QUERY = `*[

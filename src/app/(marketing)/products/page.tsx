@@ -3,8 +3,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { client } from '@/sanity/client';
-import { allProductsQuery } from '../../../sanity/helpers';
+import { client } from '@/studio/client';
+import { allProductsQuery } from '../../../studio/helpers';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';

@@ -1,9 +1,9 @@
 // Product Details
 // src/app/product/[slug]/page.tsx
 import { notFound } from 'next/navigation';
-import { client } from '@/sanity/client';
-import { urlFor } from '@/sanity/helpers';
-import { productBySlugQuery } from '@/sanity/helpers';
+import { client } from '@/studio/client';
+import { urlFor } from '@/studio/helpers';
+import { productBySlugQuery } from '@/studio/helpers';
 
 import Image from 'next/image';
 import AddToCartButton from '../../../../components/AddToCartButton'; // este sí puede ser 'use client'
