@@ -18,16 +18,16 @@ const nextConfig: NextConfig = {
     ],
     qualities: [25, 75, 85]
   },
-  turbopack: {
-    resolveAlias: {
-      // Mapea exactamente como en tsconfig "paths"
-      '@src/*': './src/*',
-      // O si usas solo '@/sanity/*' → ajusta según tu tsconfig
-      '@/src/sanity/*': './src/sanity/*',
-      // Si tu alias es '@/*': ['./src/*'] entonces:
-      '@/*': './src/*',
-    },
-  },
+  // turbopack: {
+  //   resolveAlias: {
+  //     // Mapea exactamente como en tsconfig "paths"
+  //     '@src/*': './src/*',
+  //     // O si usas solo '@/sanity/*' → ajusta según tu tsconfig
+  //     '@/src/sanity/*': './src/sanity/*',
+  //     // Si tu alias es '@/*': ['./src/*'] entonces:
+  //     '@/*': './src/*',
+  //   },
+  // },
 };
 
 export default nextConfig;
