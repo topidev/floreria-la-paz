@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingCart, LogIn, LogOut, User, Moon, Package, Sun, History, Heart } from 'lucide-react';
+import { LogIn, LogOut, User, Moon, Package, Sun, History, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import MiniCart from './Cart';

@@ -7,11 +7,6 @@ import { useCartStore } from '../store/cartStore';
 export default function AddToCartButton({ product }: { product: any }) {
     const addItem = useCartStore((state) => state.addItem);
 
-    console.log('Producto recibido en AddToCartButton:', {
-    id: product?._id || product?.id,
-    title: product?.title,
-    slug: product?.slug,
-  });
     return (
         <Button
             size="lg"

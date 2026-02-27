@@ -59,7 +59,16 @@ export const product = defineType({
                     ],
                 },
             ],
-            validation: (Rule) => Rule.required().min(1).max(5),
+            validation: (Rule) => Rule.required()
+                .min(1)
+                .max(5)
+                .custom((images: any[] | undefined) => {
+                    if (!images) return true
+
+                    const mains = images.filter(img => img?.isMain)
+
+                    return mains.length <= 1 || 'Solo una puede ser principal'
+                }),
         }),
 
         // Descripción rica (para detalles del producto)

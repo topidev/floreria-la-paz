@@ -6,7 +6,6 @@ import { urlFor } from '../../../../sanity/helpers';
 import { productBySlugQuery } from '../../../../sanity/helpers';
 import Image from 'next/image';
 import AddToCartButton from '../../../../components/AddToCartButton'; // este sí puede ser 'use client'
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -28,7 +27,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = await client.fetch(productBySlugQuery, { slug });
 
   if (!product) notFound();
-  
+
   console.log(product)
   const mainImage = product.images?.find((img: any) => img.isMain) || product.images?.[0];
   return (
@@ -63,9 +62,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {product.images.map((img: any, index: number) => (
                   <div
                     key={index}
-                    className={`relative aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
-                      img.isMain || (!mainImage && index === 0) ? 'border-primary' : 'border-transparent hover:border-primary/50'
-                    }`}
+                    className={`relative aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${img.isMain || (!mainImage && index === 0) ? 'border-primary' : 'border-transparent hover:border-primary/50'
+                      }`}
                   >
                     <Image
                       src={urlFor(img).width(200).fit('crop').url()}

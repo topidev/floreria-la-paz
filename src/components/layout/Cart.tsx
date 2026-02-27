@@ -6,34 +6,32 @@ import { useCartStore } from '../../store/cartStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 const MiniCart = () => {
-  const { items, itemCount, total, removeItem, updateQuantity } = useCartStore();
-  const [isMounted, setIsMounted] = useState(false)
 
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  const items = useCartStore(s => s.items)
+  const removeItem = useCartStore(s => s.removeItem)
+  const updateQuantity = useCartStore(s => s.updateQuantity)
 
-  if (!isMounted) {
-    // Render neutro que coincida con SSR (sin Sheet ni Dropdown internals)
-    return (
-      <Button variant="ghost" size="icon" className="relative">
-        <ShoppingCart className="h-5 w-5 size-5" />
-        {/* Badge si aplica, pero sin aria-controls ni ids dinámicos */}
-      </Button>
-    )
-  }
+  const itemCount = useMemo(
+    () => items.reduce((sum, i) => sum + i.quantity, 0),
+    [items]
+  )
+
+  const total = useMemo(
+    () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    [items]
+  )
 
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="cursor-pointer relative">
           <ShoppingCart className="h-5 w-5 size-5" />
-          {isMounted && itemCount() > 0 && (
+          {itemCount > 0 && (
             <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-              {itemCount()}
+              {itemCount}
             </span>
           )}
         </Button>
@@ -41,7 +39,7 @@ const MiniCart = () => {
 
       <SheetContent side="right" className="w-full max-w-md sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>Tu carrito ({itemCount()} items)</SheetTitle>
+          <SheetTitle>Tu carrito ({itemCount} items)</SheetTitle>
         </SheetHeader>
 
         <ScrollArea className="h-[70vh] mt-6 px-4">
@@ -54,7 +52,12 @@ const MiniCart = () => {
               {items.map((item) => (
                 <div key={item._id} className="flex gap-4">
                   <div className="relative h-20 w-20 shrink-0">
-                    <Image src={item.images[0].asset.url} alt={item.title} fill className="object-cover rounded" />
+                    <Image
+                      src={item.thumbnail.asset.url}
+                      alt={item.title}
+                      fill
+                      className="object-cover rounded"
+                    />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium">{item.title}</h4>
@@ -83,7 +86,7 @@ const MiniCart = () => {
         <div className="mt-auto py-4 px-4  border-t">
           <div className="flex justify-between text-lg font-medium">
             <span>Total</span>
-            <span>${total().toLocaleString('es-MX')} MXN</span>
+            <span>${total.toLocaleString('es-MX')} MXN</span>
           </div>
           <Button className="w-full mt-4" asChild>
             <Link href="/cart">Ver carrito completo</Link>

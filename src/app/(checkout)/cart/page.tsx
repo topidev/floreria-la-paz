@@ -6,11 +6,18 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
+import { useMemo } from 'react';
 
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, total } = useCartStore();
-  
+  const items = useCartStore(s => s.items)
+  const removeItem = useCartStore(s => s.removeItem)
+  const updateQuantity = useCartStore(s => s.updateQuantity)
+
+  const total = useMemo(
+    () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    [items]
+  )
 
   if (items.length === 0) {
     return (
@@ -36,7 +43,7 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item._id} className="flex gap-3 md:gap-4 sm:gap-5 border-b pb-6">
               <div className="relative h-32 w-32 shrink-0">
-                <Image src={item.images[0].asset.url} alt={item.title} fill className="object-cover rounded" />
+                <Image src={item.thumbnail.asset.url} alt={item.title} fill className="object-cover rounded" />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-xl">{item.title}</h3>
@@ -69,7 +76,7 @@ export default function CartPage() {
             <div className="space-y-4">
               <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
-                <span>${total().toLocaleString('es-MX')} MXN</span>
+                <span>${total.toLocaleString('es-MX')} MXN</span>
               </div>
               <div className="flex justify-between text-lg">
                 <span>Envío estimado</span>
@@ -77,7 +84,7 @@ export default function CartPage() {
               </div>
               <div className="border-t pt-4 flex justify-between text-xl font-bold">
                 <span>Total</span>
-                <span>${total().toLocaleString('es-MX')} MXN</span>
+                <span>${total.toLocaleString('es-MX')} MXN</span>
               </div>
             </div>
             <Button className="w-full mt-5" size="lg">

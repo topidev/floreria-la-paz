@@ -5,7 +5,6 @@ import { AuthProvider } from "../context/AuthContext";
 import { Toaster } from "sonner";
 import { ThemeProvider } from 'next-themes';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import QueryProvider from "../providers/QueryProvider";
 
 
