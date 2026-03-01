@@ -55,13 +55,13 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     const query = debounceSearch.trim().toLocaleLowerCase()
     const categoryQuery = categoryFilter.trim().toLowerCase()
-    return products.filter((p: any) => {
+    return products?.filter((p: any) => {
         const matchesTitle = p.title.toLowerCase().includes(query)
         const matchesCats = p.categories?.some((elem: any) => 
           elem.title.toLocaleLowerCase().includes(categoryQuery)
         )
 
-        if (query && categoryQuery) return matchesTitle || matchesCats
+        if (query && categoryQuery) return matchesTitle && matchesCats
         if (query) return matchesTitle
         if (categoryQuery) return matchesCats
         
