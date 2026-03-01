@@ -9,6 +9,15 @@ export function urlFor(source: any) {
   return builder.image(source).auto('format').fit('max');
 }
 
+// Query para obtener categía
+export const getAllCategories = `*[_type == "category"] | order(_createdAt desc) {
+  _id,
+  title,
+  slug,
+  description,
+  icon
+}`;
+
 // Query para todos los productos (para catálogo)
 export const allProductsQuery = `*[_type == "product"] | order(_createdAt desc) {
   _id,

@@ -4,23 +4,25 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/studio/client';
-import { allProductsQuery } from '../../../studio/helpers';
+import { allProductsQuery, getAllCategories } from '../../../studio/helpers';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+import { ArrowDown, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
 import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 export default function ProductsPage() {
 
   const [inputValue, setInputValue] = useState('')
   const [debounceSearch] = useDebounce(inputValue.toLocaleLowerCase(), 300)
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
@@ -36,22 +38,40 @@ export default function ProductsPage() {
     },
   });
 
-  const filteredProducts = useMemo(() => {
-    let filtered = products
-    if (debounceSearch.trim() !== '') {
-      const query = debounceSearch.toLocaleLowerCase()
-      filtered = products.filter((p: any) =>
-        p.title.toLowerCase().includes(query)
-        // p.occasions?.map((elem: string) => elem.toLowerCase()).includes(query) ||
-        // p.categories?.find((item: any) => item.title.toLowerCase() === query)
-      )
+  const { data: categories } = useQuery ({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      try {
+        const result = await client.fetch(getAllCategories);
+        console.log("Categorías: ", result)
+        return result
+      } catch(error) {
+        console.error('Error buscando categorías', error)
+        throw error
+      }
     }
-    return filtered
-  }, [products, debounceSearch])
+  })
+
+  const filteredProducts = useMemo(() => {
+    const query = debounceSearch.trim().toLocaleLowerCase()
+    const categoryQuery = categoryFilter.trim().toLowerCase()
+    return products.filter((p: any) => {
+        const matchesTitle = p.title.toLowerCase().includes(query)
+        const matchesCats = p.categories?.some((elem: any) => 
+          elem.title.toLocaleLowerCase().includes(categoryQuery)
+        )
+
+        if (query && categoryQuery) return matchesTitle || matchesCats
+        if (query) return matchesTitle
+        if (categoryQuery) return matchesCats
+        
+        return true
+    })
+  }, [products, debounceSearch, categoryFilter])
 
   useEffect(() => {
-    console.log(products)
-  }, [products])
+    console.log(categoryFilter)
+  }, [categoryFilter])
 
 
   if (isLoading) {
@@ -88,8 +108,41 @@ export default function ProductsPage() {
           onChange={(e) => setInputValue(e.target.value)}
           placeholder='Busca tu arreglo ideal (ej. Rosas, Orquideas...)'
           className='h-12 w-full block mb-8 p-3 md:text-lg lg:h-16'
-          onBlur={() => setInputValue('')}
         />
+
+        <div className="filters flex justify-start mb-8">
+          <DropdownMenu>
+            <DropdownMenuTrigger className='cursor-pointer' asChild>
+              <Button variant='outline' >
+                Categorías 
+                <ArrowDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem 
+                  className='flex gap-2 cursor-pointer'
+                  onClick={() => setCategoryFilter('')}
+                >
+                  <span>✅</span>
+                  <span>Todas</span>
+                </DropdownMenuItem>
+                {categories.map((cat: any) => (
+                  <DropdownMenuItem 
+                    key={cat._id}
+                    className='flex gap-2 cursor-pointer'
+                    onClick={() => setCategoryFilter(cat.title)}
+                  >
+                      <span>{cat.icon}</span>
+                      <span>{cat.title} </span>
+                  </DropdownMenuItem>
+                ))
+
+                }
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product: any) => (
