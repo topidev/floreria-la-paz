@@ -73,3 +73,14 @@ export interface AppError extends Error {
   source?: ErrorSource;
   userMessage?: string;
 }
+
+
+/* --------------------------------
+            useProductsFilters.ts
+-------------------------------- */
+
+export type Filters = {
+  search: string
+  category: string
+  offer: boolean
+}

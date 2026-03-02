@@ -100,21 +100,28 @@ export const product = defineType({
             description: 'Ej: Arreglos, Suscripciones, Cactus, Premium',
         }),
         defineField({
-            name: 'occasions',
-            title: 'Ocasiones',
+            name: 'events',
+            title: 'Eventos',
             type: 'array',
-            of: [{ type: 'string' }],
-            options: {
-                list: [
-                    { title: 'San Valentín', value: 'san-valentin' },
-                    { title: 'Cumpleaños', value: 'cumpleanos' },
-                    { title: 'Bodas', value: 'bodas' },
-                    { title: 'Condolencias', value: 'condolencias' },
-                    { title: 'Día de la Madre', value: 'dia-madre' },
-                    { title: 'Aniversario', value: 'aniversario' },
-                ],
-            },
+            of: [{ type: 'reference', to: [{ type: 'occasions' }] }],
+            description: 'Ej: XV Años, Bodas, Cumpleaños, Aniversario'
         }),
+        // defineField({
+        //     name: 'occasions',
+        //     title: 'Ocasiones',
+        //     type: 'array',
+        //     of: [{ type: 'string' }],
+        //     options: {
+        //         list: [
+        //             { title: 'San Valentín', value: 'san-valentin' },
+        //             { title: 'Cumpleaños', value: 'cumpleanos' },
+        //             { title: 'Bodas', value: 'bodas' },
+        //             { title: 'Condolencias', value: 'condolencias' },
+        //             { title: 'Día de la Madre', value: 'dia-madre' },
+        //             { title: 'Aniversario', value: 'aniversario' },
+        //         ],
+        //     },
+        // }),
 
         // Stock y disponibilidad
         defineField({

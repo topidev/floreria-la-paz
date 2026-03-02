@@ -16,16 +16,19 @@ import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
 import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
+import { useProductsFilters } from '@/hooks/useProductsFilters';
 
 export default function ProductsPage() {
 
   const [inputValue, setInputValue] = useState('')
   const [debounceSearch] = useDebounce(inputValue.toLocaleLowerCase(), 300)
   const [categoryFilter, setCategoryFilter] = useState('')
+  const [offerFilter, setOfferFilter] = useState(false)
+  const [checked, setChecked] = useState('all')
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
@@ -55,22 +58,13 @@ export default function ProductsPage() {
     }
   })
 
-  const filteredProducts = useMemo(() => {
-    const query = debounceSearch.trim().toLocaleLowerCase()
-    const categoryQuery = categoryFilter.trim().toLowerCase()
-    return products?.filter((p: any) => {
-        const matchesTitle = p.title.toLowerCase().includes(query)
-        const matchesCats = p.categories?.some((elem: any) => 
-          elem.title.toLocaleLowerCase().includes(categoryQuery)
-        )
+  const filters = {
+  search: debounceSearch,
+  category: categoryFilter,
+  offer: offerFilter,
+}
 
-        if (query && categoryQuery) return matchesTitle && matchesCats
-        if (query) return matchesTitle
-        if (categoryQuery) return matchesCats
-        
-        return true
-    })
-  }, [products, debounceSearch, categoryFilter])
+const filteredProducts = useProductsFilters(products ?? [], filters)
 
   useEffect(() => {
     console.log(categoryFilter)
@@ -123,32 +117,45 @@ export default function ProductsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
-                <DropdownMenuItem 
-                  className='flex gap-2 cursor-pointer'
-                  onClick={() => setCategoryFilter('')}
+                <DropdownMenuRadioGroup 
+                  value={checked} 
+                  onValueChange={setChecked}
                 >
-                  <span>✅</span>
-                  <span>Todas</span>
-                </DropdownMenuItem>
-                {categories.map((cat: any) => (
-                  <DropdownMenuItem 
-                    key={cat._id}
+                  <DropdownMenuRadioItem  
+                    value='all'
                     className='flex gap-2 cursor-pointer'
-                    onClick={() => setCategoryFilter(cat.title)}
+                    onClick={() => setCategoryFilter('')}
                   >
-                      <span>{cat.icon}</span>
-                      <span>{cat.title} </span>
-                  </DropdownMenuItem>
-                ))
-
-                }
+                    <span>Todas</span>
+                    {/* <span>✅</span> */}
+                  </DropdownMenuRadioItem >
+                  {categories.map((cat: any) => (
+                    <DropdownMenuRadioItem  
+                      value={cat.slug}
+                      key={cat._id}
+                      className='flex cursor-pointer'
+                      onClick={() => setCategoryFilter(cat.title)}
+                    >
+                        <span>{cat.title} </span>
+                        {/* <span>{cat.icon}</span> */}
+                    </DropdownMenuRadioItem >
+                  ))}
+                </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
           <FieldGroup className="max-w-sm">
-            <Field orientation="horizontal">
-              <Checkbox id="offer-checkbox" name="offer-checkbox" />
-              <Label htmlFor="offer-checkbox">En Oferta</Label>
+            <Field 
+              orientation="horizontal" 
+              className='w-fit'
+            >
+              <Checkbox
+                checked={offerFilter} 
+                className='cursor-pointer w-5 h-5'
+                onClick={() => setOfferFilter(!offerFilter)}
+                id="offer-checkbox" name="offer-checkbox" 
+              />
+              <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
             </Field>
           </FieldGroup>
         </div>

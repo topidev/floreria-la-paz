@@ -57,7 +57,7 @@ const MiniCart = () => {
                       alt={item.title}
                       fill
                       className="object-cover rounded"
-                      blurDataURL={item.thumbnail.asset.metadata.lqip}
+                      blurDataURL={item.thumbnail?.asset?.metadata.lqip}
                     />
                   </div>
                   <div className="flex-1">

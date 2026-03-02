@@ -11,7 +11,10 @@ export default function AddToCartButton({ product }: { product: any }) {
         <Button
             size="lg"
             className="w-full md:w-auto text-secondary cursor-pointer shadow-accent shadow-xs"
-            onClick={() => addItem({ ...product, quantity: 1, thumbnail: product.thumbnail ?? null })}
+            onClick={() => {
+                console.log(product)
+                addItem({ ...product, quantity: 1, thumbnail: product.thumbnail ?? product.images[0] })}
+            }
             disabled={product.stock <= 0}
         >
             {product.stock > 0 ? 'Agregar al carrito' : 'Agotado'}

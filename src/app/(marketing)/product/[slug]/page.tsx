@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 //   return {
 //     title: product.title,
 //     description: product.seoDescription || product.description?.[0]?.children?.[0]?.text || '',
-//     openGraph: {
+//     openGraph: {s
 //       images: product.mainImage ? product.thumbnail.asset.url : null,
 //     },
 //   };
@@ -109,8 +109,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
               {product.categories?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {product.categories.map((cat: any) => (
-                    <Badge key={cat._id} variant="secondary">
+                  {product.categories.map((cat: any, i:number) => (
+                    <Badge key={cat.slug?.current ?? cat.title ?? i} variant="secondary">
                       {cat.title}
                     </Badge>
                   ))}
