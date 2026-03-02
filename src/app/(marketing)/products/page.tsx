@@ -17,6 +17,9 @@ import { useDebounce } from 'use-debounce'
 import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field, FieldGroup } from '@/components/ui/field';
+import { Label } from '@/components/ui/label';
 
 export default function ProductsPage() {
 
@@ -110,7 +113,7 @@ export default function ProductsPage() {
           className='h-12 w-full block mb-8 p-3 md:text-lg lg:h-16'
         />
 
-        <div className="filters flex justify-start mb-8">
+        <div className="filters flex justify-start items-center mb-8 gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger className='cursor-pointer' asChild>
               <Button variant='outline' >
@@ -142,6 +145,12 @@ export default function ProductsPage() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          <FieldGroup className="max-w-sm">
+            <Field orientation="horizontal">
+              <Checkbox id="offer-checkbox" name="offer-checkbox" />
+              <Label htmlFor="offer-checkbox">En Oferta</Label>
+            </Field>
+          </FieldGroup>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
