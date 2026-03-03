@@ -21,6 +21,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { useProductsFilters } from '@/hooks/useProductsFilters';
+import { addToFavorite } from '@/lib/firebaseService';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 export default function ProductsPage() {
 
@@ -29,6 +32,7 @@ export default function ProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState('')
   const [offerFilter, setOfferFilter] = useState(false)
   const [checked, setChecked] = useState('all')
+  const { user } = useAuth()
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
@@ -65,6 +69,15 @@ export default function ProductsPage() {
   }
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
+  const handleFavorite = (pIb: string, uId: string) => {
+    try {
+      addToFavorite(pIb, uId);
+      toast.success('Añadido a favoritos')
+    } catch (erro) {
+      console.log(erro)
+      throw new Error('¿Qué pasó?')
+    }
+  }
   
 
   useEffect(() => {
@@ -177,13 +190,17 @@ export default function ProductsPage() {
                 {product.isOnSale && (
                   <Badge className="absolute top-2 left-2 text-md bg-destructive">Oferta</Badge>
                 )}
-                <Button
-                  className='cursor-pointer p-0 duration-250 group absolute top-2 right-2 bg-primary-foreground rounded transition-colors'
-                >
-                  <Heart
-                    className='h-4 w-4 duration-250 text-primary group-hover:text-secondary-foreground transition-colors'
-                  />
-                </Button>
+                {user && (
+                  <Button
+                    className='cursor-pointer p-0 duration-250 group absolute top-2 right-2 bg-primary-foreground rounded transition-colors'
+                    onClick={() => handleFavorite(product._id, user.uid) }
+                  >
+                    <Heart
+                      className='h-4 w-4 text-primary 
+                                duration-250 group-hover:text-secondary-foreground transition-colors'
+                    />
+                  </Button>
+                )}
               </CardContent>
               <CardFooter className="flex flex-col p-4 items-center md:items-start">
                 <h3 className="text-lg lg:text-xl xl:text-2xl text-center md:text-left font-medium mb-1">{product.title}</h3>
