@@ -25,3 +25,13 @@ export const createOrUpdateUser = async (user: UserData) => {
         throw error; // Propaga para manejar en caller
     }
 };
+
+export const addToFavorite = async (productId: string, uid: string) => {
+    if(!uid) throw new Error('No Autenticado')
+    
+    const favoriteRef = doc(db, `users/${uid}/favorites/${productId}`)
+    await setDoc(favoriteRef, {
+        productId,
+        createdAt: new Date()
+    })
+}

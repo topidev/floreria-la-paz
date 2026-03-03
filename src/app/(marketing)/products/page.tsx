@@ -59,12 +59,13 @@ export default function ProductsPage() {
   })
 
   const filters = {
-  search: debounceSearch,
-  category: categoryFilter,
-  offer: offerFilter,
-}
+    search: debounceSearch,
+    category: categoryFilter,
+    offer: offerFilter,
+  }
+  const filteredProducts = useProductsFilters(products ?? [], filters)
 
-const filteredProducts = useProductsFilters(products ?? [], filters)
+  
 
   useEffect(() => {
     console.log(categoryFilter)
