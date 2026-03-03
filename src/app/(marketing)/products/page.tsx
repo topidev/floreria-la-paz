@@ -21,9 +21,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { useProductsFilters } from '@/hooks/useProductsFilters';
-import { addToFavorite } from '@/lib/firebaseService';
+import { addToFavorite, getUserFavorites, removeFavorite } from '@/lib/firebaseService';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { useFavoritesStore } from '@/store/favoritesStore';
 
 export default function ProductsPage() {
 
@@ -33,6 +34,9 @@ export default function ProductsPage() {
   const [offerFilter, setOfferFilter] = useState(false)
   const [checked, setChecked] = useState('all')
   const { user } = useAuth()
+  const [favoriteSet, setFavoriteSet] = useState<Set<string>>(new Set());
+
+  const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
@@ -69,20 +73,11 @@ export default function ProductsPage() {
   }
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
-  const handleFavorite = (pIb: string, uId: string) => {
-    try {
-      addToFavorite(pIb, uId);
-      toast.success('Añadido a favoritos')
-    } catch (erro) {
-      console.log(erro)
-      throw new Error('¿Qué pasó?')
-    }
-  }
-  
-
   useEffect(() => {
-    console.log(categoryFilter)
-  }, [categoryFilter])
+  if (user) {
+    loadFavorites(user.uid)
+  }
+}, [user, loadFavorites]);
 
 
   if (isLoading) {
@@ -193,11 +188,17 @@ export default function ProductsPage() {
                 {user && (
                   <Button
                     className='cursor-pointer p-0 duration-250 group absolute top-2 right-2 bg-primary-foreground rounded transition-colors'
-                    onClick={() => handleFavorite(product._id, user.uid) }
+                    onClick={() => toggleFavorite(product._id, user.uid)}
                   >
                     <Heart
-                      className='h-4 w-4 text-primary 
-                                duration-250 group-hover:text-secondary-foreground transition-colors'
+                      className={`
+                        h-4 w-4 transition-colors duration-250
+                        group-hover:text-secondary-foreground
+                        ${favoriteIds.has(product._id)
+                          ? "fill-red-500 text-red-500 group-hover:text-red-600"
+                          : "text-gray-500 group-hover:text-red-400"
+                        }
+                      `}
                     />
                   </Button>
                 )}

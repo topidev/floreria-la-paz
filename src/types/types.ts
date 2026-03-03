@@ -76,11 +76,25 @@ export interface AppError extends Error {
 
 
 /* --------------------------------
-            useProductsFilters.ts
+       useProductsFilters.ts
 -------------------------------- */
 
 export type Filters = {
   search: string
   category: string
   offer: boolean
+}
+
+
+/* --------------------------------
+       favoritesStore.ts
+-------------------------------- */
+export interface FavoriteState {
+  favoriteIds: Set<string>;           // Set para no repetidos
+  isLoading: boolean;
+  error: string | null;
+
+  // Acciones
+  loadFavorites: (uid: string) => Promise<void>;
+  toggleFavorite: (productId: string, uid: string) => Promise<void>;
 }

@@ -1,5 +1,5 @@
 // src/lib/firebaseService.ts
-import { doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase'; // tu config de Firebase
 import { UserData } from '../types/types';
 
@@ -26,6 +26,8 @@ export const createOrUpdateUser = async (user: UserData) => {
     }
 };
 
+
+// Funcion para agregar producto a favoritos
 export const addToFavorite = async (productId: string, uid: string) => {
     if(!uid) throw new Error('No Autenticado')
     
@@ -34,4 +36,21 @@ export const addToFavorite = async (productId: string, uid: string) => {
         productId,
         createdAt: new Date()
     })
+}
+
+// Funcion para remover producto de favoritos
+export const removeFavorite = async (productId: string, uid: string) => {
+  const favoriteRef = doc(db, `users/${uid}/favorites/${productId}`);
+  await deleteDoc(favoriteRef);
+}
+
+// Funcion para obtener los favoritos del usuario
+export const getUserFavorites = async (uid: string) => {
+    const favoriteSnp = await getDocs(collection(db, `users/${uid}/favorites`))
+
+    const products = favoriteSnp.docs.map(doc => doc.data().productId)
+
+    if (products.length === 0) return []
+
+    return products
 }
