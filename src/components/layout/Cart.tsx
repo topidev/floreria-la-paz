@@ -13,6 +13,7 @@ const MiniCart = () => {
   const items = useCartStore(s => s.items)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
+  
 
   const itemCount = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),

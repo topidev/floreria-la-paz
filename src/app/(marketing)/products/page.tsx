@@ -120,7 +120,9 @@ export default function ProductsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger className='cursor-pointer' asChild>
               <Button variant='outline' >
-                Categorías 
+                { 
+                  checked === 'all' ? 'Categorías' : `${categoryFilter}`
+                }
                 <ArrowDown />
               </Button>
             </DropdownMenuTrigger>

@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
+import { DebouncedState } from "use-debounce";
 
 
 /* --------------------------------
@@ -42,10 +43,13 @@ export interface CartItem {
 
 export interface CartStore {
   items: CartItem[];
+  isSyncing: boolean;
+  loadCart: (uid: string) => void;
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  getDebouncedSync: (uid: string) => DebouncedState<(currentItems: CartItem[]) => Promise<void> | undefined>;
 }
 
 /* --------------------------------
@@ -98,3 +102,4 @@ export interface FavoriteState {
   loadFavorites: (uid: string) => Promise<void>;
   toggleFavorite: (productId: string, uid: string) => Promise<void>;
 }
+

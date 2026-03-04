@@ -1,7 +1,11 @@
 // src/lib/firebaseService.ts
-import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from './firebase'; // tu config de Firebase
-import { UserData } from '../types/types';
+import { CartItem, UserData } from '../types/types';
+
+/* --------------------------------
+                user/
+-------------------------------- */
 
 // Función para crear o actualizar usuario en Firestore (upsert)
 export const createOrUpdateUser = async (user: UserData) => {
@@ -25,6 +29,11 @@ export const createOrUpdateUser = async (user: UserData) => {
         throw error; // Propaga para manejar en caller
     }
 };
+
+
+/* --------------------------------
+          user/favorites
+-------------------------------- */
 
 
 // Funcion para agregar producto a favoritos
@@ -53,4 +62,43 @@ export const getUserFavorites = async (uid: string) => {
     if (products.length === 0) return []
 
     return products
+}
+
+/* --------------------------------
+          user/cart
+-------------------------------- */
+
+
+// Funcion para guardar todo el carrito
+export const syncCart = async (uid:string, products: CartItem[]) => {
+    if (!uid) throw new Error('No autenticado');
+
+    const batch = writeBatch(db)
+    const cartRef = collection(db, `users/${uid}/cart`)
+
+    const snapshot = await getDocs(cartRef)
+    snapshot.docs.forEach((d) => batch.delete(d.ref))
+
+    products.forEach((item) => {
+        const itemDoc = doc(cartRef, item._id)
+        batch.set(itemDoc, {
+            productId: item._id,
+            // price: item.price,
+            quantity: item.quantity,
+            addedAt: Timestamp.now()
+        })
+    })
+
+    await batch.commit()
+}
+
+// Funcion para cargar cart de Firebase
+export const getCartFromFirebase = async (uid:string): Promise<{ productId: string, quantity: number }[]> => {
+    if(!uid) return []
+
+    const snapshot = await getDocs(collection(db, `users/${uid}/cart`))
+    return snapshot.docs.map((doc) => ({
+        productId: doc.data().productId,
+        quantity: doc.data().quantity
+    }))
 }

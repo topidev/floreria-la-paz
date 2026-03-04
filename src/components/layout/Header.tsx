@@ -27,7 +27,6 @@ export default function Header() {
     const mountTheme = () => {
       setMounted(true)
     }
-
     mountTheme()
   }, [])
 

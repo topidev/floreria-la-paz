@@ -6,13 +6,19 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useCartSync } from '@/hooks/useCartSync';
+import { syncCart } from '@/lib/firebaseService';
 
 
 export default function CartPage() {
   const items = useCartStore(s => s.items)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
+  const getDebouncedSync = useCartStore(s => s.getDebouncedSync)
+  const { user } = useAuth()
+  const { isSyncing } = useCartSync(user?.uid);
 
   const total = useMemo(
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -36,7 +42,12 @@ export default function CartPage() {
   return (
     <div className="container py-5 md:py-8 mx-auto">
       <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold mb-6 pb-4 border-b-2">Tu carrito</h1>
-
+      {isSyncing && (
+        <div className="fixed bottom-6 right-6 z-50 bg-background/90 backdrop-blur-sm border px-4 py-2 rounded-lg shadow-lg text-sm flex items-center gap-2">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          Sincronizando carrito...
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-full">
         {/* Lista de items */}
         <div className="md:col-span-1 lg:col-span-2 space-y-6">
@@ -50,7 +61,7 @@ export default function CartPage() {
                 <p className="text-lg font-semibold text-primary mt-1">
                   ${item.price.toLocaleString('es-MX')}
                 </p>
-                <div className="flex items-center gap-4 mt-4">
+                <div className="flex flex-col items-start md:flex-row md:items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
                     <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
                       -
@@ -87,7 +98,16 @@ export default function CartPage() {
                 <span>${total.toLocaleString('es-MX')} MXN</span>
               </div>
             </div>
-            <Button className="w-full mt-5 cursor-pointer" title='Proceder al pago' size="lg">
+            <Button 
+              className="w-full mt-5 cursor-pointer" 
+              title='Proceder al pago' 
+              size="lg"
+              onClick={() => {
+                if (user) {
+                  syncCart(user.uid, items)
+                }
+              }}
+            >
               Proceder al pago
             </Button>
           </Card>
