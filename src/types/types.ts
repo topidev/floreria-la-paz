@@ -49,7 +49,7 @@ export interface CartStore {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  getDebouncedSync: (uid: string) => DebouncedState<(currentItems: CartItem[]) => Promise<void> | undefined>;
+  // getDebouncedSync: (uid: string) => DebouncedState<(currentItems: CartItem[]) => Promise<void> | undefined>;
 }
 
 /* --------------------------------

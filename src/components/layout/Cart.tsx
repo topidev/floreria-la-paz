@@ -6,14 +6,20 @@ import { useCartStore } from '../../store/cartStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useCartSync } from '@/hooks/useCartSync';
 
 const MiniCart = () => {
 
+  const { user } = useAuth()
   const items = useCartStore(s => s.items)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
-  
+
+
+  useCartSync(user?.uid)
+
 
   const itemCount = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),
@@ -24,6 +30,12 @@ const MiniCart = () => {
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [items]
   )
+
+  useEffect(() => {
+    console.log('Carrito antes de actualizar')
+    console.log(items)
+  }, [items])
+
 
   return (
     <Sheet>

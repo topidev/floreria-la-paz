@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
@@ -16,7 +16,6 @@ export default function CartPage() {
   const items = useCartStore(s => s.items)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
-  const getDebouncedSync = useCartStore(s => s.getDebouncedSync)
   const { user } = useAuth()
   const { isSyncing } = useCartSync(user?.uid);
 
@@ -98,9 +97,9 @@ export default function CartPage() {
                 <span>${total.toLocaleString('es-MX')} MXN</span>
               </div>
             </div>
-            <Button 
-              className="w-full mt-5 cursor-pointer" 
-              title='Proceder al pago' 
+            <Button
+              className="w-full mt-5 cursor-pointer"
+              title='Proceder al pago'
               size="lg"
               onClick={() => {
                 if (user) {

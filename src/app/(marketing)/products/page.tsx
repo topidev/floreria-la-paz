@@ -14,16 +14,14 @@ import { ArrowDown, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
+import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { useProductsFilters } from '@/hooks/useProductsFilters';
-import { addToFavorite, getUserFavorites, removeFavorite } from '@/lib/firebaseService';
 import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
 import { useFavoritesStore } from '@/store/favoritesStore';
 
 export default function ProductsPage() {
@@ -34,7 +32,6 @@ export default function ProductsPage() {
   const [offerFilter, setOfferFilter] = useState(false)
   const [checked, setChecked] = useState('all')
   const { user } = useAuth()
-  const [favoriteSet, setFavoriteSet] = useState<Set<string>>(new Set());
 
   const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
@@ -52,14 +49,14 @@ export default function ProductsPage() {
     },
   });
 
-  const { data: categories } = useQuery ({
+  const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
       try {
         const result = await client.fetch(getAllCategories);
         console.log("Categorías: ", result)
         return result
-      } catch(error) {
+      } catch (error) {
         console.error('Error buscando categorías', error)
         throw error
       }
@@ -74,10 +71,10 @@ export default function ProductsPage() {
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
   useEffect(() => {
-  if (user) {
-    loadFavorites(user.uid)
-  }
-}, [user, loadFavorites]);
+    if (user) {
+      loadFavorites(user.uid)
+    }
+  }, [user, loadFavorites]);
 
 
   if (isLoading) {
@@ -120,7 +117,7 @@ export default function ProductsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger className='cursor-pointer' asChild>
               <Button variant='outline' >
-                { 
+                {
                   checked === 'all' ? 'Categorías' : `${categoryFilter}`
                 }
                 <ArrowDown />
@@ -128,11 +125,11 @@ export default function ProductsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
-                <DropdownMenuRadioGroup 
-                  value={checked} 
+                <DropdownMenuRadioGroup
+                  value={checked}
                   onValueChange={setChecked}
                 >
-                  <DropdownMenuRadioItem  
+                  <DropdownMenuRadioItem
                     value='all'
                     className='flex gap-2 cursor-pointer'
                     onClick={() => setCategoryFilter('')}
@@ -141,14 +138,14 @@ export default function ProductsPage() {
                     {/* <span>✅</span> */}
                   </DropdownMenuRadioItem >
                   {categories.map((cat: any) => (
-                    <DropdownMenuRadioItem  
+                    <DropdownMenuRadioItem
                       value={cat.slug}
                       key={cat._id}
                       className='flex cursor-pointer'
                       onClick={() => setCategoryFilter(cat.title)}
                     >
-                        <span>{cat.title} </span>
-                        {/* <span>{cat.icon}</span> */}
+                      <span>{cat.title} </span>
+                      {/* <span>{cat.icon}</span> */}
                     </DropdownMenuRadioItem >
                   ))}
                 </DropdownMenuRadioGroup>
@@ -156,15 +153,15 @@ export default function ProductsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
           <FieldGroup className="max-w-sm">
-            <Field 
-              orientation="horizontal" 
+            <Field
+              orientation="horizontal"
               className='w-fit'
             >
               <Checkbox
-                checked={offerFilter} 
+                checked={offerFilter}
                 className='cursor-pointer w-5 h-5'
                 onClick={() => setOfferFilter(!offerFilter)}
-                id="offer-checkbox" name="offer-checkbox" 
+                id="offer-checkbox" name="offer-checkbox"
               />
               <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
             </Field>
