@@ -1,10 +1,11 @@
 // src/stores/cartStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { CartStore } from '../types/types';
+import { CartItem, CartStore } from '../types/types';
 import { toast } from 'sonner';
 import { client } from '@/studio/client';
-import { getCartFromFirebase } from '@/lib/firebaseService';
+import { getCartFromFirebase, syncCart } from '@/lib/firebaseService';
+import { isAsync } from 'zod/v3';
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -52,16 +53,33 @@ export const useCartStore = create<CartStore>()(
           console.error('Error cargando cart:', err);
         }
       },
-      addItem: (item) => {
+      addItem: async (item: CartItem, uid?: string) => {
+        const currentItems = get().items
+        let updatedItems: CartItem[]
+
         const existing = get().items.some(i => i._id === item._id);
         if (existing) {
-          set({
-            items: get().items.map(i =>
-              i._id === item._id ? { ...i, quantity: i.quantity + item.quantity } : i
-            ),
-          });
+          updatedItems = currentItems.map(i =>
+            i._id === item._id ? {
+              ...i, quantity: i.quantity + item.quantity
+            } : i
+          )
         } else {
-          set({ items: [...get().items, item] });
+          updatedItems = [...currentItems, { ...item, quantity: item.quantity || 1 }]
+        }
+        set({ items: updatedItems })
+
+        if (uid) {
+          try {
+            set({ isSyncing: true })
+            await syncCart(uid, updatedItems)
+            toast.success('Producto agregado y sincronizado');
+          } catch (err) {
+            console.error('Sync inmediato falló en addItem', err);
+            toast.error('Producto agregado localmente, sincronización pendiente...');
+          } finally {
+            set({ isSyncing: false });
+          }
         }
         toast.success('Producto agregado al carrito');
       },
@@ -71,21 +89,6 @@ export const useCartStore = create<CartStore>()(
           items: get().items.map(i => (i._id === _id ? { ...i, quantity } : i)),
         }),
       clearCart: () => set({ items: [] }),
-      // getDebouncedSync: (uid: string) => useDebouncedCallback(
-      //   async (currentItems: CartItem[]) => {
-      //     if (!uid) return
-
-      //     try {
-      //       set({ isSyncing: true })
-      //       await syncCart(uid, currentItems);
-      //       set({ isSyncing: false });
-      //     } catch (err) {
-      //       console.error('Sync falló:', err);
-      //       toast.error('No se pudo sincronizar el carrito');
-      //       set({ isSyncing: false });
-      //     }
-      //   }, 5000, { maxWait: 15000 }
-      // ),
     }),
     {
       name: 'cart-storage',

@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import MiniCart from './Cart';
 import MobileNav from './MobileNav';
+import Image from 'next/image';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -46,7 +47,18 @@ export default function Header() {
           </div>
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" title='Desert Bloom'>
-            <span className="text-lg sm:text-xl lg:text-2xl font-serif font-bold text-primary">Florería La Paz</span>
+            <span className="relative w-13 h-13">
+              <Image
+                src='/images/assets/desertBloom.webp'
+                fill
+                alt='Floreía la Paz'
+                priority
+                className='rounded-full'
+              />
+            </span>
+            <span className="text-lg sm:text-xl lg:text-2xl font-serif font-bold text-primary">
+              DesertBloom
+            </span>
           </Link>
 
         </div>

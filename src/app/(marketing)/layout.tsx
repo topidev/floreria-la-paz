@@ -12,10 +12,12 @@ import { useCartStore } from '@/store/cartStore';
 export default function MarketingLayout({ children }: { children: ReactNode }) {
 
   const { user } = useAuth()
-  
+
   useEffect(() => {
     if (user) {
       useCartStore.getState().loadCart(user.uid)
+    } else {
+      useCartStore.getState().clearCart()
     }
   }, [user])
   return (

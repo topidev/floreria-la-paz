@@ -137,7 +137,7 @@ export default function ProductsPage() {
                     <span>Todas</span>
                     {/* <span>✅</span> */}
                   </DropdownMenuRadioItem >
-                  {categories.map((cat: any) => (
+                  {categories?.map((cat: any) => (
                     <DropdownMenuRadioItem
                       value={cat.slug}
                       key={cat._id}

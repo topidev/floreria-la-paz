@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       {/* Fondo con imagen hero de flores/atardecer en La Paz */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/auth-bg.jpg"           // ← pon tu imagen aquí (ver abajo cómo agregarla)
+          src="/images/auth-bg.jpg"
           alt="Flores y atardecer en La Paz, BCS"
           fill
           className="object-cover brightness-[0.7] contrast-[1.1]"
@@ -29,8 +29,19 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className="relative z-10 w-full max-w-md px-4 py-12">
         {/* Logo o título arriba (opcional) */}
         <div className="text-center mb-8">
+          <Link href="/" className='flex items-center justify-center w-fit m-auto h-25'>
+            <span className="relative w-20 h-20">
+              <Image
+                src='/images/assets/desertBloom.webp'
+                fill
+                alt='Florería la Paz'
+                priority
+                className='rounded-full'
+              />
+            </span>
+          </Link>
           <Link href="/" className="text-3xl font-serif font-bold text-primary drop-shadow-lg">
-            Florería La Paz
+            DesertBloom
           </Link>
           <p className="text-primary/80 mt-1 text-sm">
             Flores frescas del desierto al corazón

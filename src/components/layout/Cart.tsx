@@ -14,6 +14,7 @@ const MiniCart = () => {
 
   const { user } = useAuth()
   const items = useCartStore(s => s.items)
+  const clearItems = useCartStore(s => s.clearCart)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
 
@@ -31,10 +32,11 @@ const MiniCart = () => {
     [items]
   )
 
-  useEffect(() => {
-    console.log('Carrito antes de actualizar')
-    console.log(items)
-  }, [items])
+  // useEffect(() => {
+  //   if (!user) {
+  //     clearItems()
+  //   }
+  // }, [user, clearItems])
 
 
   return (
@@ -66,11 +68,13 @@ const MiniCart = () => {
                 <div key={item._id} className="flex items-center gap-4">
                   <div className="relative h-20 w-20 shrink-0">
                     <Image
-                      src={item.thumbnail?.asset?.url ?? '/placeholder.png'}
+                      src={item.thumbnail?.asset?.url ?? '/desertBloom.webp'}
                       alt={item.title}
                       fill
+                      sizes='80px'
                       className="object-cover rounded"
                       blurDataURL={item.thumbnail?.asset?.metadata.lqip}
+                      placeholder='blur'
                     />
                   </div>
                   <div className="flex-1">

@@ -3,17 +3,19 @@
 
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '../store/cartStore';
+import { useAuth } from '@/context/AuthContext';
 
 export default function AddToCartButton({ product }: { product: any }) {
     const addItem = useCartStore((state) => state.addItem);
+    const { user } = useAuth()
 
     return (
         <Button
             size="lg"
             className="w-full md:w-auto text-secondary cursor-pointer shadow-accent shadow-xs"
             onClick={() => {
-                console.log(product)
-                addItem({ ...product, quantity: 1, thumbnail: product.thumbnail ?? product.images[0] })}
+                addItem({ ...product, quantity: 1, thumbnail: product.thumbnail ?? product.images[0] }, user?.uid)
+            }
             }
             disabled={product.stock <= 0}
         >

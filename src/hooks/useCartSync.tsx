@@ -8,20 +8,23 @@ import { toast } from 'sonner';
 
 export function useCartSync(uid?: string) {
     const { user } = useAuth();
-    const auth = uid ?? user?.uid 
+    const auth = uid ?? user?.uid
     const items = useCartStore(s => s.items);
-    
+
     const debouncedSync = useDebouncedCallback(
         async (currentItems) => {
-        if (!auth) return;
-        try {
-            await syncCart(auth, currentItems);
-        } catch (error) {
-            console.error('Error al sincronizar carrito con Firebase:', error);
-            toast.error('No se pudo sincronizar el carrito. Intenta de nuevo más tarde.');
-        }
+            if (!auth) return;
+            try {
+                useCartStore.setState({ isSyncing: true })
+                await syncCart(auth, currentItems);
+            } catch (error) {
+                console.error('Error al sincronizar carrito con Firebase:', error);
+                toast.error('No se pudo sincronizar el carrito. Intenta de nuevo más tarde.');
+            } finally {
+                useCartStore.setState({ isSyncing: false })
+            }
         },
-        6000, 
+        6000,
         {
             maxWait: 15000, // máximo 12s de espera acumulada
             leading: false, // no ejecutar inmediatamente al primer cambio
@@ -32,7 +35,7 @@ export function useCartSync(uid?: string) {
     useEffect(() => {
         if (!auth || items.length === 0) {
             debouncedSync.cancel()
-            return   
+            return
         }
         debouncedSync(items);
         return () => debouncedSync.cancel();
