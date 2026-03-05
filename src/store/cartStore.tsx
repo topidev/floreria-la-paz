@@ -5,7 +5,6 @@ import { CartItem, CartStore } from '../types/types';
 import { toast } from 'sonner';
 import { client } from '@/studio/client';
 import { getCartFromFirebase, syncCart } from '@/lib/firebaseService';
-import { isAsync } from 'zod/v3';
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -69,6 +68,10 @@ export const useCartStore = create<CartStore>()(
         }
         set({ items: updatedItems })
 
+        if (!uid) {
+          toast.success('Producto agregado al carrito');
+        }
+
         if (uid) {
           try {
             set({ isSyncing: true })
@@ -81,7 +84,6 @@ export const useCartStore = create<CartStore>()(
             set({ isSyncing: false });
           }
         }
-        toast.success('Producto agregado al carrito');
       },
       removeItem: (_id) => set({ items: get().items.filter(i => i._id !== _id) }),
       updateQuantity: (_id, quantity) =>

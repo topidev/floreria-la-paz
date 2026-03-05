@@ -116,7 +116,7 @@ export default function LoginPage() {
 
         <Button
           variant="outline"
-          className="w-full cursor-pointer text-secondary"
+          className="w-full transition-colors duration-350 cursor-pointer text-gray-800 hover:bg-primary"
           onClick={handleGoogleLogin}
           disabled={loadingGoogle}
         >

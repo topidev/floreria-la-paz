@@ -81,7 +81,7 @@ export default function Header() {
 
         {/* Acciones derecha */}
         <div className="flex items-center space-x-4">
-          {/* Carrito (placeholder) */}
+          {/* Carrito  */}
           <MiniCart />
 
           {/* Menú de usuario */}
@@ -106,26 +106,26 @@ export default function Header() {
               {user ? (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className='flex items-center cursor-pointer'>
+                    <Link href="/dashboard" className='flex items-center cursor-pointer'>
                       <User className='mr-2 h-4 w-4' />
                       {user.displayName || user.email?.split('@')[0]}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/orders" className="flex items-center cursor-pointer">
+                    <Link href="/account/orders" className="flex items-center cursor-pointer">
                       <History className="mr-2 h-4 w-4" />
                       Mis pedidos
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/history" className="flex items-center cursor-pointer">
+                    <Link href="/account/history" className="flex items-center cursor-pointer">
                       <Package className="mr-2 h-4 w-4" />
                       Compras
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/favorites" className="flex items-center cursor-pointer">
+                    <Link href="/account/favorites" className="flex items-center cursor-pointer">
                       <Heart className="mr-2 h-4 w-4" />
                       Favoritos
                     </Link>

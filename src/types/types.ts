@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
-import { DebouncedState } from "use-debounce";
+import { LucideIcon } from "lucide-react";
 
 
 /* --------------------------------
@@ -45,7 +45,7 @@ export interface CartStore {
   items: CartItem[];
   isSyncing: boolean;
   loadCart: (uid: string) => void;
-  addItem: (item: CartItem) => void;
+  addItem: (item: CartItem, uid?: string) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -103,3 +103,18 @@ export interface FavoriteState {
   toggleFavorite: (productId: string, uid: string) => Promise<void>;
 }
 
+
+
+/* --------------------------------
+       account.ts Navbar
+-------------------------------- */
+export interface NavItem {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+export interface SidebarNavProps {
+  items: NavItem[];
+  userName?: string | null
+}

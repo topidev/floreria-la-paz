@@ -73,3 +73,4 @@ export const mobileCats = [
   { href: '/products?category=san-valentin', label: 'San Valentin' },
   { href: '/products?category=condolencias', label: 'Condolencias' },
 ]
+
