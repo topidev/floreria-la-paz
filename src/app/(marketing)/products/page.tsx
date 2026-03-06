@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { ArrowDown, Heart } from 'lucide-react';
+import { ArrowDown, ChevronDown, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
@@ -110,17 +110,17 @@ export default function ProductsPage() {
           name='inputFindSet'
           onChange={(e) => setInputValue(e.target.value)}
           placeholder='Busca tu arreglo ideal (ej. Rosas, Orquideas...)'
-          className='h-12 w-full block mb-8 p-3 md:text-lg lg:h-16'
+          className='h-12 w-full max-w-3xl m-auto block mb-8 p-3 md:text-lg lg:h-16'
         />
 
-        <div className="filters flex justify-start items-center mb-8 gap-4">
+        <div className="filtersb py-2 max-w-3xl m-auto flex justify-center items-center mb-8 gap-4">
           <DropdownMenu>
-            <DropdownMenuTrigger className='cursor-pointer' asChild>
+            <DropdownMenuTrigger className='duration-300 cursor-pointer' asChild>
               <Button variant='outline' >
                 {
                   checked === 'all' ? 'Categorías' : `${categoryFilter}`
                 }
-                <ArrowDown />
+                <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -135,7 +135,6 @@ export default function ProductsPage() {
                     onClick={() => setCategoryFilter('')}
                   >
                     <span>Todas</span>
-                    {/* <span>✅</span> */}
                   </DropdownMenuRadioItem >
                   {categories?.map((cat: any) => (
                     <DropdownMenuRadioItem
@@ -152,20 +151,73 @@ export default function ProductsPage() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <FieldGroup className="max-w-sm">
-            <Field
-              orientation="horizontal"
-              className='w-fit'
-            >
-              <Checkbox
-                checked={offerFilter}
-                className='cursor-pointer w-5 h-5'
-                onClick={() => setOfferFilter(!offerFilter)}
-                id="offer-checkbox" name="offer-checkbox"
-              />
-              <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
-            </Field>
-          </FieldGroup>
+          <div
+            className='flex gap-2 w-fit border duration-300 bg-secondary/50 hover:bg-secondary py-1.75 px-2.5 rounded-md'
+            onClick={() => setOfferFilter(!offerFilter)}
+          >
+            <Checkbox
+              checked={offerFilter}
+              className='cursor-pointer w-5 h-5'
+              id="offer-checkbox" name="offer-checkbox"
+              onClick={() => setOfferFilter(!offerFilter)}
+            />
+            <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant='outline'
+                className='cursor-pointer duration-300'
+              >
+                Precio
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuRadioGroup
+                  value='min'
+                // onValueChange={setChecked}
+                >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                  // onClick={() => setCategoryFilter('')}
+                  >
+                    <span>$0 - $100</span>
+                  </DropdownMenuRadioItem >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                  // onClick={() => setCategoryFilter('')}
+                  >
+                    <span>$100 - $500</span>
+                  </DropdownMenuRadioItem >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                  // onClick={() => setCategoryFilter('')}
+                  >
+                    <span>$500 - $1000</span>
+                  </DropdownMenuRadioItem >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                  // onClick={() => setCategoryFilter('')}
+                  >
+                    <span>$1000 - $3000</span>
+                  </DropdownMenuRadioItem >
+                  <DropdownMenuRadioItem
+                    value='min'
+                    className='flex gap-2 cursor-pointer'
+                  // onClick={() => setCategoryFilter('')}
+                  >
+                    <span>Cualquier Precio</span>
+                  </DropdownMenuRadioItem >
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -218,6 +270,6 @@ export default function ProductsPage() {
           ))}
         </div>
       </div>
-    </section>
+    </section >
   );
 }
