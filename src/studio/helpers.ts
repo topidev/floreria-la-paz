@@ -70,3 +70,25 @@ export const productBySlugQuery = `*[_type == "product" && slug.current == $slug
   tags,
   seoDescription
 }`;
+
+export const productsByIds = `*[_type == "product" && _id in $ids] | order(_createdAt desc) {
+  _id,
+  price,
+  title,
+  isOnSale,
+  salePrice,
+  description,
+  "slug": slug.current,
+  "thumbnail": coalesce(
+    images[isMain == true][0],
+    images[0]
+  ){
+    asset->{url, metadata { lqip }},
+    alt
+  },
+  categories[]-> { title, slug },
+  isAvailable,
+  occasions,
+  stock,
+  tags,
+}`

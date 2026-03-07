@@ -36,7 +36,7 @@ export default function AccountDashboard() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold">Favoritos recientes</h2>
           <Button variant="outline" asChild>
-            <Link href="/account/favorites">Ver todos →</Link>
+            <Link href="/favorites">Ver todos →</Link>
           </Button>
         </div>
         {/* <FavoriteCarousel /> Carousel con Sanity images + add to cart */}
@@ -45,13 +45,13 @@ export default function AccountDashboard() {
       {/* Quick actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Button variant="secondary" asChild className="h-28 flex flex-col">
-          <Link href="/account/orders">
+          <Link href="/orders">
             <Package className="h-8 w-8 mb-2" />
             Mis Pedidos
           </Link>
         </Button>
         <Button variant="secondary" asChild className="h-28 flex flex-col">
-          <Link href="/account/track">
+          <Link href="/track">
             <Truck className="h-8 w-8 mb-2" />
             Rastrear envío
           </Link>

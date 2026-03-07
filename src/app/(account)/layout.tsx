@@ -14,34 +14,29 @@ import { cn } from "@/lib/utils"
 export const sidebarNavItems = [
     {
         title: 'Inicio',
-        href: '/',
+        href: '/dashboard',
         icon: User,
     },
     {
         title: 'Favoritos',
-        href: '/account/favorites',
+        href: '/favorites',
         icon: Heart,
     },
     {
         title: 'Mis Pedidos',
-        href: '/account/orders',
+        href: '/orders',
         icon: Package,
     },
     {
         title: 'Rastrear Pedido',
-        href: '/account/track',
+        href: '/track',
         icon: Truck,
     },
     {
         title: 'Notificaciones',
-        href: '/account/notifications',
+        href: '/notifications',
         icon: Bell,
     },
-    // {
-    //     title: 'Cerrar Sesión',
-    //     href: '/login',
-    //     icon: LogOut
-    // },
 ]
 
 
@@ -64,6 +59,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                     <div className="space-y-6 flex flex-col h-full">
                         <div>
                             <h2 className="text-lg font-semibold tracking-tight">Mi Cuenta</h2>
+                            <p className="text-sm text-muted-foreground">
+                                {user?.displayName}
+                            </p>
                             <p className="text-sm text-muted-foreground">
                                 {user?.email}
                             </p>

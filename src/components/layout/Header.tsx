@@ -113,19 +113,19 @@ export default function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/account/orders" className="flex items-center cursor-pointer">
+                    <Link href="/orders" className="flex items-center cursor-pointer">
                       <History className="mr-2 h-4 w-4" />
                       Mis pedidos
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/history" className="flex items-center cursor-pointer">
+                    <Link href="/history" className="flex items-center cursor-pointer">
                       <Package className="mr-2 h-4 w-4" />
                       Compras
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/favorites" className="flex items-center cursor-pointer">
+                    <Link href="/favorites" className="flex items-center cursor-pointer">
                       <Heart className="mr-2 h-4 w-4" />
                       Favoritos
                     </Link>

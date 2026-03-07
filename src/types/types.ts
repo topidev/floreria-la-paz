@@ -118,3 +118,27 @@ export interface SidebarNavProps {
   items: NavItem[];
   userName?: string | null
 }
+
+
+
+/* --------------------------------
+       favorites.ts acccount
+-------------------------------- */
+export interface FavoriteProduct {
+  _id: string;
+  title: string;
+  price: number;
+  quantity: number;
+  isOnSale: boolean;
+  salePrice: number;
+  slug: string;
+  thumbnail: {
+    alt: string,
+    asset: {
+      metadata: {
+        lqip: string,
+      },
+      url: string,
+    }
+  };
+}
