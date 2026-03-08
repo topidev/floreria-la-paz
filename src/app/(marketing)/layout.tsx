@@ -8,6 +8,7 @@ import Footer from '../../components/layout/Footer';
 import { useAuth } from '@/context/AuthContext';
 import CarHydrator from '@/components/layout/cart-hydrator';
 import { useCartStore } from '@/store/cartStore';
+import { useCartSync } from '@/hooks/useCartSync';
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
 
@@ -20,6 +21,9 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
       useCartStore.getState().clearCart()
     }
   }, [user])
+
+  useCartSync()
+
   return (
     <div className="flex min-h-screen flex-col">
       <CarHydrator />

@@ -40,7 +40,7 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(allProductsQuery);
-        console.log(result)
+        // console.log(result)
         return result;
       } catch (err) {
         console.error('Error fetching Sanity:', err);
@@ -54,7 +54,7 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(getAllCategories);
-        console.log("Categorías: ", result)
+        // console.log("Categorías: ", result)
         return result
       } catch (error) {
         console.error('Error buscando categorías', error)

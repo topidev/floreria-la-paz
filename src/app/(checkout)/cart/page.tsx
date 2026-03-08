@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
@@ -18,6 +18,17 @@ export default function CartPage() {
   const updateQuantity = useCartStore(s => s.updateQuantity)
   const { user } = useAuth()
   const { isSyncing } = useCartSync(user?.uid);
+  const isMounted = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false
+      if (user?.uid) {
+        syncCart(user.uid, useCartStore.getState().items)
+          .catch(err => console.error('Sync al salir falló', err))
+      }
+    }
+  }, [user?.uid])
 
   const total = useMemo(
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -62,15 +73,15 @@ export default function CartPage() {
                 </p>
                 <div className="flex flex-col items-start md:flex-row md:items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
-                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
+                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1), user?.uid)}>
                       -
                     </Button>
                     <span className="px-4 py-2">{item.quantity}</span>
-                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+                    <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, item.quantity + 1, user?.uid)}>
                       +
                     </Button>
                   </div>
-                  <Button variant="ghost" className="text-primary-foreground bg-destructive cursor-pointer" onClick={() => removeItem(item._id)}>
+                  <Button variant="ghost" className="text-primary-foreground bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
                     Eliminar
                   </Button>
                 </div>

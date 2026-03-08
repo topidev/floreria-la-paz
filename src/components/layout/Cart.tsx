@@ -8,7 +8,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useCartSync } from '@/hooks/useCartSync';
 
 const MiniCart = () => {
 
@@ -16,9 +15,6 @@ const MiniCart = () => {
   const items = useCartStore(s => s.items)
   const removeItem = useCartStore(s => s.removeItem)
   const updateQuantity = useCartStore(s => s.updateQuantity)
-
-
-  useCartSync(user?.uid)
 
 
   const itemCount = useMemo(
@@ -75,16 +71,16 @@ const MiniCart = () => {
                       ${item.price.toLocaleString('es-MX')} × {item.quantity}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>
+                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1), user?.uid)}>
                         -
                       </Button>
                       <span className="w-8 text-center">{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+                      <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={() => updateQuantity(item._id, item.quantity + 1, user?.uid)}>
                         +
                       </Button>
                     </div>
                   </div>
-                  <Button className=' cursor-pointer shadow-xs shadow-accent-foreground/50' variant="ghost" size="icon" onClick={() => removeItem(item._id)}>
+                  <Button className=' cursor-pointer shadow-xs shadow-accent-foreground/50' variant="ghost" size="icon" onClick={() => removeItem(item._id, user?.uid)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

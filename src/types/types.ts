@@ -69,8 +69,8 @@ export interface CartStore {
   isSyncing: boolean;
   loadCart: (uid: string) => void;
   addItem: (item: CartItem, uid?: string) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (id: string, uid?: string) => void;
+  updateQuantity: (id: string, quantity: number, uid?: string) => void;
   clearCart: () => void;
   // getDebouncedSync: (uid: string) => DebouncedState<(currentItems: CartItem[]) => Promise<void> | undefined>;
 }

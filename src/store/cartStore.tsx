@@ -37,8 +37,6 @@ export const useCartStore = create<CartStore>()(
             `
             const details = await client.fetch(query, { ids: fbItems.map(i => i.productId) })
 
-            console.log('Detalles de la consulta: ', details)
-
             const mergedItems = fbItems.map(fb => {
               const detail = details.find((d: any) => d._id == fb.productId)
               return { ...detail, quantity: fb.quantity }
@@ -46,7 +44,7 @@ export const useCartStore = create<CartStore>()(
 
             console.log('Combinación de carritos', mergedItems)
             set({ items: mergedItems })
-            toast.info('Carrito cargado desde tu cuenta');
+            // toast.info('Carrito cargado desde tu cuenta');
           }
         } catch (err) {
           console.error('Error cargando cart:', err);
@@ -85,12 +83,52 @@ export const useCartStore = create<CartStore>()(
           }
         }
       },
-      removeItem: (_id) => set({ items: get().items.filter(i => i._id !== _id) }),
-      updateQuantity: (_id, quantity) =>
-        set({
-          items: get().items.map(i => (i._id === _id ? { ...i, quantity } : i)),
-        }),
-      clearCart: () => set({ items: [] }),
+      removeItem: async (id: string, uid?: string) => {
+        const updatedItems = get().items.filter(i => i._id !== id);
+        set({ items: updatedItems });
+
+        if (uid) {
+          try {
+            set({ isSyncing: true });
+            await syncCart(uid, updatedItems);
+            toast.success('Producto eliminado y sincronizado');
+          } catch (err) {
+            console.error('Sync remove falló', err);
+            toast.error('Eliminado localmente, sincronizando en segundo plano...');
+          } finally {
+            set({ isSyncing: false });
+          }
+        } else {
+          toast.success('Producto eliminado');
+        }
+      },
+
+      updateQuantity: async (id: string, quantity: number, uid?: string) => {
+        const updatedItems = get().items.map(i =>
+          i._id === id ? { ...i, quantity: Math.max(1, quantity) } : i
+        );
+        set({ items: updatedItems });
+
+        console.log('Actualizando cantidad')
+        console.log(uid)
+        if (uid) {
+          console.log('Si hay usuario')
+          try {
+            set({ isSyncing: true });
+            await syncCart(uid, updatedItems);
+            console.log('Cantidad Actualizada')
+          } catch (err) {
+            console.error('Sync update falló', err);
+          } finally {
+            set({ isSyncing: false });
+          }
+        }
+      },
+
+      clearCart: async (uid?: string) => {
+        set({ items: [] });
+        if (uid) await syncCart(uid, []);
+      },
     }),
     {
       name: 'cart-storage',
