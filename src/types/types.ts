@@ -2,6 +2,11 @@ import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { LucideIcon } from "lucide-react";
 
+
+/* --------------------------------
+          Producto Mapeado
+-------------------------------- */
+
 export interface SanityImage {
   alt?: string;
   asset: {
@@ -74,7 +79,7 @@ export interface CartItem {
 }
 
 export interface CartStore {
-  items: CartItem[];
+  items: NewCartItem[];
   isSyncing: boolean;
   loadCart: (uid: string) => void;
   addItem: (item: CartItem, uid?: string) => void;
