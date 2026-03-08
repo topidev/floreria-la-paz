@@ -5,7 +5,7 @@ import { createImageUrlBuilder } from '@sanity/image-url';
 // Builder para imágenes optimizadas
 const builder = createImageUrlBuilder(client);
 
-export function urlFor(source: any) {
+export function urlFor(source: string) {
   return builder.image(source).auto('format').fit('max');
 }
 

@@ -35,7 +35,7 @@ export interface Product extends BaseProduct {
   images?: SanityImage;
 }
 
-export interface NewCartItem extends BaseProduct {
+export interface CartItem extends BaseProduct {
   quantity: number;
 }
 
@@ -62,24 +62,24 @@ export interface UserData {
           CartStore.ts
 -------------------------------- */
 
-export interface CartItem {
-  _id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  thumbnail: {
-    alt: string,
-    asset: {
-      metadata: {
-        lqip: string,
-      },
-      url: string,
-    }
-  };
-}
+// export interface CartItem {
+//   _id: string;
+//   title: string;
+//   price: number;
+//   quantity: number;
+//   thumbnail: {
+//     alt: string,
+//     asset: {
+//       metadata: {
+//         lqip: string,
+//       },
+//       url: string,
+//     }
+//   };
+// }
 
 export interface CartStore {
-  items: NewCartItem[];
+  items: CartItem[];
   isSyncing: boolean;
   loadCart: (uid: string) => void;
   addItem: (item: CartItem, uid?: string) => void;

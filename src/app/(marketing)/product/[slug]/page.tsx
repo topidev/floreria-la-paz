@@ -41,13 +41,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {mainImage && (
               <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg">
                 <Image
-                  src={urlFor(mainImage).width(800).fit('max').auto('format').url()}
+                  src={mainImage.asset.url || '/images/asset/desetBloom.webp'}
                   alt={mainImage.alt || product.title}
                   fill
                   className="object-cover"
                   priority
                   quality={85}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL={mainImage.asset.metadata.lqip}
+                  placeholder='blur'
                 />
                 {product.isOnSale && (
                   <Badge className="absolute top-4 right-4 bg-destructive text-white px-3 py-1 text-lg">
@@ -109,7 +111,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
               {product.categories?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {product.categories.map((cat: any, i:number) => (
+                  {product.categories.map((cat: any, i: number) => (
                     <Badge key={cat.slug?.current ?? cat.title ?? i} variant="secondary">
                       {cat.title}
                     </Badge>

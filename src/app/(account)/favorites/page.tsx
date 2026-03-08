@@ -9,14 +9,18 @@ import { productsByIds } from "@/studio/helpers";
 import type { FavoriteProduct } from "@/types/types"
 import Image from "next/image"
 import Link from "next/link";
-import { Heart, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
+import { useEffect } from "react";
 
 
 export default function FavoritesPage() {
   const { user } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!user) router.push('/')
+  }, [user, router])
 
 
   const { data: favoriteIds = [], isLoading: loadingIds } = useQuery({
