@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/studio/client";
 import { productsByIds } from "@/studio/helpers";
-import type { FavoriteProduct } from "@/types/types"
+import type { Product } from "@/types/types"
 import Image from "next/image"
 import Link from "next/link";
 import { Heart } from "lucide-react";
@@ -84,7 +84,7 @@ export default function FavoritesPage() {
       <h1 className="text-3xl font-bold tracking-tight mb-8">Mis Favoritos ({products.length})</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product: FavoriteProduct) => (
+        {products.map((product: Product) => (
           <div
             key={product._id}
             className="group overflow-hidden rounded-2xl border bg-background/30 shadow-sm hover:shadow-md transition-all"
@@ -98,7 +98,7 @@ export default function FavoritesPage() {
                     fill
                     className="object-cover transition-transform group-hover:scale-105 duration-350"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    blurDataURL={product.thumbnail?.asset?.metadata.lqip}
+                    blurDataURL={product.thumbnail?.asset?.metadata?.lqip}
                     placeholder="blur"
                   />
                 )}

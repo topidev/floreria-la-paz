@@ -25,6 +25,7 @@ export interface BaseProduct {
   thumbnail: SanityImage;
   isAvailable?: boolean;
   stock?: number;
+  slug: string;
   categories?: Array<{ title: string; slug: string }>;
   tags?: string[];
   occasions?: string[];
@@ -32,6 +33,7 @@ export interface BaseProduct {
 
 export interface Product extends BaseProduct {
   isOnSale?: boolean;
+  salePrice?: number;
   images?: SanityImage;
 }
 
@@ -61,22 +63,6 @@ export interface UserData {
 /* --------------------------------
           CartStore.ts
 -------------------------------- */
-
-// export interface CartItem {
-//   _id: string;
-//   title: string;
-//   price: number;
-//   quantity: number;
-//   thumbnail: {
-//     alt: string,
-//     asset: {
-//       metadata: {
-//         lqip: string,
-//       },
-//       url: string,
-//     }
-//   };
-// }
 
 export interface CartStore {
   items: CartItem[];
@@ -154,28 +140,4 @@ export interface NavItem {
 export interface SidebarNavProps {
   items: NavItem[];
   userName?: string | null
-}
-
-
-
-/* --------------------------------
-       favorites.ts acccount
--------------------------------- */
-export interface FavoriteProduct {
-  _id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  isOnSale: boolean;
-  salePrice: number;
-  slug: string;
-  thumbnail: {
-    alt: string,
-    asset: {
-      metadata: {
-        lqip: string,
-      },
-      url: string,
-    }
-  };
 }
