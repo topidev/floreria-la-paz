@@ -2,6 +2,38 @@ import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { LucideIcon } from "lucide-react";
 
+export interface SanityImage {
+  alt?: string;
+  asset: {
+    url: string;
+    metadata?: {
+      lqip?: string;
+    };
+  };
+}
+
+
+export interface BaseProduct {
+  _id: string;
+  title: string;
+  price: number;
+  thumbnail: SanityImage;
+  isAvailable?: boolean;
+  stock?: number;
+  categories?: Array<{ title: string; slug: string }>;
+  tags?: string[];
+  occasions?: string[];
+}
+
+export interface Product extends BaseProduct {
+  isOnSale?: boolean;
+  images?: SanityImage;
+}
+
+export interface NewCartItem extends BaseProduct {
+  quantity: number;
+}
+
 
 /* --------------------------------
           FirebaseService.ts
