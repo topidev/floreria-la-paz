@@ -65,7 +65,7 @@ const MiniCart = () => {
                       fill
                       sizes='80px'
                       className="object-cover rounded"
-                      blurDataURL={item.thumbnail?.asset?.metadata.lqip}
+                      blurDataURL={item.thumbnail?.asset?.metadata?.lqip}
                       placeholder='blur'
                     />
                   </div>
