@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { ArrowDown, ChevronDown, Heart } from 'lucide-react';
+import { ChevronDown, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { useProductsFilters } from '@/hooks/useProductsFilters';
 import { useAuth } from '@/context/AuthContext';
@@ -151,18 +151,22 @@ export default function ProductsPage() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div
+          {/* <div
             className='flex gap-2 w-fit border duration-300 bg-secondary/50 hover:bg-secondary py-1.75 px-2.5 rounded-md'
             onClick={() => setOfferFilter(!offerFilter)}
-          >
-            <Checkbox
-              checked={offerFilter}
-              className='cursor-pointer w-5 h-5'
-              id="offer-checkbox" name="offer-checkbox"
-              onClick={() => setOfferFilter(!offerFilter)}
-            />
-            <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
-          </div>
+          > */}
+          <FieldGroup className="mx-auto w-56">
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={offerFilter}
+                className='cursor-pointer w-5 h-5'
+                id="offer-checkbox" name="offer-checkbox"
+                onClick={() => setOfferFilter(!offerFilter)}
+              />
+              <FieldLabel htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</FieldLabel>
+            </Field>
+          </FieldGroup>
+          {/* </div> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

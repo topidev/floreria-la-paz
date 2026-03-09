@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
+import { Trash, Trash2 } from 'lucide-react';
 
 
 export default function CartPage() {
@@ -64,14 +65,21 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item._id} className="flex gap-3 md:gap-4 sm:gap-5 border-b pb-6">
               <div className="relative h-32 w-32 shrink-0">
-                <Image src={item.thumbnail.asset.url} alt={item.title} fill className="object-cover rounded" />
+                <Image 
+                  src={item.thumbnail.asset.url} 
+                  alt={item.title} 
+                  fill 
+                  blurDataURL={item.thumbnail.asset.metadata?.lqip}
+                  className="object-cover rounded" 
+                  placeholder='blur'
+                />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-xl">{item.title}</h3>
                 <p className="text-lg font-semibold text-primary mt-1">
                   ${item.price.toLocaleString('es-MX')}
                 </p>
-                <div className="flex flex-col items-start md:flex-row md:items-center gap-4 mt-4">
+                <div className="flex items-center md:flex-row md:items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
                     <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1), user?.uid)}>
                       -
@@ -81,8 +89,8 @@ export default function CartPage() {
                       +
                     </Button>
                   </div>
-                  <Button variant="ghost" className="text-primary-foreground bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
-                    Eliminar
+                  <Button variant="ghost" className="text-primary-foreground duration-300 bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
+                    <Trash2 className='w-4 h-4'/>
                   </Button>
                 </div>
               </div>
