@@ -19,7 +19,7 @@ export const getAllCategories = `*[_type == "category"] | order(_createdAt desc)
 }`;
 
 
-export const getAllOccacions = `[type == "occasions"] | order(_createdAt desc) {
+export const getAllOccacions = `*[_type == "occasions"] | order(_createdAt desc) {
   _id,
   title,
   slug,

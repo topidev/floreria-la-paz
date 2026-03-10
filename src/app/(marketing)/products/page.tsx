@@ -33,7 +33,7 @@ export default function ProductsPage() {
   const [checked, setChecked] = useState('all')
   const { user } = useAuth()
   const [priceFilter, setPriceFilter] = useState('')
-  const [priceSelected, setPriceSelected] = useState('Cualquier Precio')
+  const [priceChecked, setPriceChecked] = useState('Cualquier Precio')
 
   const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
@@ -101,6 +101,8 @@ export default function ProductsPage() {
     search: debounceSearch,
     category: categoryFilter,
     offer: offerFilter,
+    price: priceFilter,
+    events: ""
   }
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
@@ -202,7 +204,7 @@ export default function ProductsPage() {
                 className='w-36 cursor-pointer duration-300'
               >
                 {
-                  priceSelected === 'Cualquier Precio' ? 'Precio' : `${priceSelected}`
+                  priceChecked === 'Cualquier Precio' ? 'Precio' : `${priceFilter}`
                 }
                 <ChevronDown />
               </Button>
@@ -218,7 +220,10 @@ export default function ProductsPage() {
                       key={index}
                       value={priceFilter.minMaxPrice}
                       className='flex gap-2 cursor-pointer'
-                      onClick={() => setPriceSelected(priceFilter.minMaxPrice)}
+                      onClick={() => {
+                        console.log(priceFilter.minMaxPrice)
+                        setPriceChecked(priceFilter.minMaxPrice)}
+                      }
                     >
                       <span>{priceFilter.minMaxPrice}</span>
                     </DropdownMenuRadioItem>

@@ -96,7 +96,7 @@ export default function Home() {
                     hover:bg-black/30 transition-colors"
                 >
                   <Link
-                    href="/products/on-sale"
+                    href="/products"
                     className="text-center text-2xl w-full h-full flex items-end justify-end text-accent px-6"
                   >
                   </Link>

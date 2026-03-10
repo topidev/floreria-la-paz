@@ -110,6 +110,8 @@ export type Filters = {
   search: string
   category: string
   offer: boolean
+  price: string
+  events: string
 }
 
 
