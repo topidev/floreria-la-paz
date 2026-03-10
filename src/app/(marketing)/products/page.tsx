@@ -4,7 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/studio/client';
-import { allProductsQuery, getAllCategories } from '../../../studio/helpers';
+import { allProductsQuery, getAllCategories, getAllOccacions } from '../../../studio/helpers';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +32,8 @@ export default function ProductsPage() {
   const [offerFilter, setOfferFilter] = useState(false)
   const [checked, setChecked] = useState('all')
   const { user } = useAuth()
+  const [priceFilter, setPriceFilter] = useState('')
+  const [priceSelected, setPriceSelected] = useState('Cualquier Precio')
 
   const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
@@ -62,6 +64,38 @@ export default function ProductsPage() {
       }
     }
   })
+
+  const { data: events } = useQuery({
+    queryKey: ['occacions'],
+    queryFn: async () => {
+      try {
+        const result = await client.fetch(getAllOccacions)
+        console.log(result)
+        return result
+      } catch (err) {
+        console.error('Error buscando eventos')
+        throw err
+      }
+    }
+  })
+
+  const prices = [
+    {
+      minMaxPrice: "$0 - $100"
+    },
+    {
+      minMaxPrice: "$100 - $500"
+    },
+    {
+      minMaxPrice: "$500 - $1000"
+    },
+    {
+      minMaxPrice: "$1000 - $3000"
+    },
+    {
+      minMaxPrice: "Cualquier Precio"
+    }
+  ]
 
   const filters = {
     search: debounceSearch,
@@ -144,17 +178,12 @@ export default function ProductsPage() {
                       onClick={() => setCategoryFilter(cat.title)}
                     >
                       <span>{cat.title} </span>
-                      {/* <span>{cat.icon}</span> */}
                     </DropdownMenuRadioItem >
                   ))}
                 </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <div
-            className='flex gap-2 w-fit border duration-300 bg-secondary/50 hover:bg-secondary py-1.75 px-2.5 rounded-md'
-            onClick={() => setOfferFilter(!offerFilter)}
-          > */}
           <FieldGroup className="mx-auto w-56">
             <Field orientation="horizontal">
               <Checkbox
@@ -166,58 +195,34 @@ export default function ProductsPage() {
               <FieldLabel htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</FieldLabel>
             </Field>
           </FieldGroup>
-          {/* </div> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant='outline'
-                className='cursor-pointer duration-300'
+                className='w-36 cursor-pointer duration-300'
               >
-                Precio
+                {
+                  priceSelected === 'Cualquier Precio' ? 'Precio' : `${priceSelected}`
+                }
                 <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuRadioGroup
-                  value='min'
-                // onValueChange={setChecked}
+                  value={priceFilter}
+                  onValueChange={setPriceFilter}
                 >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$0 - $100</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$100 - $500</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$500 - $1000</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$1000 - $3000</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='min'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>Cualquier Precio</span>
-                  </DropdownMenuRadioItem >
+                  {prices.map((priceFilter, index) => (
+                    <DropdownMenuRadioItem
+                      key={index}
+                      value={priceFilter.minMaxPrice}
+                      className='flex gap-2 cursor-pointer'
+                      onClick={() => setPriceSelected(priceFilter.minMaxPrice)}
+                    >
+                      <span>{priceFilter.minMaxPrice}</span>
+                    </DropdownMenuRadioItem>
+                  ))}
                 </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
             </DropdownMenuContent>
