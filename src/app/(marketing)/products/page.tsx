@@ -35,6 +35,9 @@ export default function ProductsPage() {
   const [priceFilter, setPriceFilter] = useState('')
   const [priceChecked, setPriceChecked] = useState('Cualquier Precio')
 
+  const [eventFilter, setEventFilter] = useState('')
+  const [eventChecked, setEventChecked] = useState('all')
+
   const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
   const { data: products, isLoading } = useQuery({
@@ -42,7 +45,6 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(allProductsQuery);
-        // console.log(result)
         return result;
       } catch (err) {
         console.error('Error fetching Sanity:', err);
@@ -56,7 +58,6 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(getAllCategories);
-        // console.log("Categorías: ", result)
         return result
       } catch (error) {
         console.error('Error buscando categorías', error)
@@ -102,7 +103,7 @@ export default function ProductsPage() {
     category: categoryFilter,
     offer: offerFilter,
     price: priceFilter,
-    events: ""
+    events: eventFilter
   }
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
@@ -149,9 +150,9 @@ export default function ProductsPage() {
           className='h-12 w-full max-w-3xl m-auto block mb-8 p-3 md:text-lg lg:h-16'
         />
 
-        <div className="filtersb py-2 max-w-3xl m-auto flex justify-center items-center mb-8 gap-4">
+        <div className="filters py-2 max-w-3xl m-auto flex flex-wrap flex-cols md:flex-rows justify-between items-center mb-8 gap-4 md:gap-3">
           <DropdownMenu>
-            <DropdownMenuTrigger className='duration-300 cursor-pointer' asChild>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
               <Button variant='outline' >
                 {
                   checked === 'all' ? 'Categorías' : `${categoryFilter}`
@@ -186,22 +187,12 @@ export default function ProductsPage() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <FieldGroup className="mx-auto w-56">
-            <Field orientation="horizontal">
-              <Checkbox
-                checked={offerFilter}
-                className='cursor-pointer w-5 h-5'
-                id="offer-checkbox" name="offer-checkbox"
-                onClick={() => setOfferFilter(!offerFilter)}
-              />
-              <FieldLabel htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</FieldLabel>
-            </Field>
-          </FieldGroup>
+          
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
               <Button
                 variant='outline'
-                className='w-36 cursor-pointer duration-300'
+                className='cduration-300'
               >
                 {
                   priceChecked === 'Cualquier Precio' ? 'Precio' : `${priceFilter}`
@@ -232,6 +223,51 @@ export default function ProductsPage() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
+              <Button variant='outline' >
+                {
+                  eventChecked === 'all' ? 'Evento' : `${eventFilter}`
+                }
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuRadioGroup
+                  value={eventChecked}
+                  onValueChange={setEventChecked}
+                >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                    onClick={() => setEventFilter('')}
+                  >
+                    <span>Todas</span>
+                  </DropdownMenuRadioItem >
+                  {events?.map((evnt: any) => (
+                    <DropdownMenuRadioItem
+                      value={evnt.slug}
+                      key={evnt._id}
+                      className='flex cursor-pointer'
+                      onClick={() => setEventFilter(evnt.title)}
+                    >
+                      <span>{evnt.title} </span>
+                    </DropdownMenuRadioItem >
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div className="flex items-center justify-center gap-3 w-full md:w-1/5">
+            <Checkbox
+              checked={offerFilter}
+              className='cursor-pointer w-5 h-5'
+              id="offer-checkbox" name="offer-checkbox"
+              onClick={() => setOfferFilter(!offerFilter)}
+            />
+            <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -8,6 +8,7 @@ export function useProductsFilters(products: any[], filters: Filters) {
         const search = filters.search.trim().toLocaleLowerCase()
         const category = filters.category.trim().toLocaleLowerCase()
         const price = filters.price.trim();
+        const event = filters.events.trim().toLocaleLowerCase();
 
         return products.filter((p) => {
             if (search) {
@@ -33,7 +34,18 @@ export function useProductsFilters(products: any[], filters: Filters) {
                 return priceMatch
             }
 
-        return true
+            if (event) {
+                const cleanEvnt = event.includes('ñ') ? event.replace('ñ', 'n') : event
+                console.log(p)
+                console.log(cleanEvnt)
+                console.log(p.events)
+                const evntMatch = p.events?.some((e: any) =>
+                    e.title.toLocaleLowerCase().includes(event)
+                )
+                return evntMatch
+            }
+
+            return true
         })
     }, [products, filters])
 }
