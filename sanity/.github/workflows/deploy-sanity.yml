@@ -1,0 +1,35 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches: [main]                    # o la rama que uses para producción
+    paths:
+      - 'sanity/**'                     # solo cuando cambie algo en la carpeta sanity
+      - 'schemaTypes/**'
+      - 'sanity.config.ts'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy Sanity Studio
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: |
+          pnpm sanity deploy --yes
