@@ -94,11 +94,15 @@ const MiniCart = () => {
             <span>Total</span>
             <span>${total.toLocaleString('es-MX')} MXN</span>
           </div>
-          <Button className="w-full mt-4 text-secondary" asChild>
-            <Link href="/cart">Ver carrito completo</Link>
-          </Button>
-          <Button variant="default" className="cursor-pointer w-full mt-2 text-secondary">
-            Proceder al pago
+
+          <Button variant="default" className="cursor-pointer w-full mt-4 text-secondary">
+            <Link
+              href='/cart'
+              title='Proceder al pago'
+              className='w-full'
+            >
+              Proceder al pago
+            </Link>
           </Button>
         </div>
       </SheetContent>

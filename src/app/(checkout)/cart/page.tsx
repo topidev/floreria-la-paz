@@ -141,7 +141,7 @@ export default function CartPage() {
               </div>
             </div>
             <Button
-              className="w-full mt-5 cursor-pointer"
+              className="w-full flex items-center gap-2 mt-5 cursor-pointer"
               title='Proceder al pago'
               size="lg"
               disabled={ isPaying }
@@ -153,6 +153,9 @@ export default function CartPage() {
                 }
               }}
             >
+               {isPaying && (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+               )}
               Proceder al pago
             </Button>
           </Card>

@@ -157,19 +157,26 @@ export const getOrderById = async (orderId: string) => {
 // Funcion para limpiar carrito despues del pago
 export const clearUserCart = async (uid: string) => {
   try {
-    // Si tu carrito es un documento dentro de una colección 'carts'
-    const cartRef = doc(db, `users/${uid}/cart`); 
+    // 1. Referencia a la subcolección de documentos del carrito
+    const cartCollectionRef = collection(db, "users", uid, "cart");
     
-    // Opción 1: Borrar el documento
-    // await deleteDoc(cartRef);
+    // 2. Obtenemos todos los documentos actuales (los productos)
+    const snapshot = await getDocs(cartCollectionRef);
 
-    // Opción 2: Solo vaciar el array de items (si tu estructura es { items: [] })
-    await updateDoc(cartRef, {
-       items: [] 
-    });
+    if (snapshot.empty) {
+      console.log("El carrito ya estaba vacío.");
+      return;
+    }
 
-    console.log(`🛒 Carrito del usuario ${uid} vaciado.`);
+    // 3. Usamos un Batch para borrar todos de un solo golpe (más eficiente)
+    const batch = writeBatch(db);
+    snapshot.docs.forEach((productDoc) => {
+      batch.delete(productDoc.ref);
+    }); 
+
+    await batch.commit();
+    console.log(`🛒 Carrito de la subcolección de ${uid} vaciado por completo.`);
   } catch (error) {
-    console.error("Error al limpiar carrito:", error);
+    console.error("Error al limpiar la subcolección del carrito:", error);
   }
 };
