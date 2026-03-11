@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
 import { Trash, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 
 export default function CartPage() {
@@ -20,6 +22,8 @@ export default function CartPage() {
   const { user } = useAuth()
   const { isSyncing } = useCartSync(user?.uid);
   const isMounted = useRef(true)
+  const router = useRouter()
+  const [isPaying, setIsPaying] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -35,6 +39,26 @@ export default function CartPage() {
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [items]
   )
+
+  const handleCheckOut = async () => {
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItems: items, userId: user?.uid })
+      })
+
+      const data = await response.json()
+      if (data.url) {
+        router.push(data.url)
+      }
+    } catch (error) {
+      toast.error("No se pudo completar el pago")
+      console.log(error)
+    } finally {
+      setIsPaying(false)
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -120,9 +144,12 @@ export default function CartPage() {
               className="w-full mt-5 cursor-pointer"
               title='Proceder al pago'
               size="lg"
+              disabled={ isPaying }
               onClick={() => {
                 if (user) {
                   syncCart(user.uid, items)
+                  setIsPaying(true)
+                  handleCheckOut()
                 }
               }}
             >

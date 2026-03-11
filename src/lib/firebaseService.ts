@@ -1,5 +1,5 @@
 // src/lib/firebaseService.ts
-import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch, serverTimestamp, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from './firebase'; // tu config de Firebase
 import { CartItem, UserData } from '../types/types';
 
@@ -102,3 +102,74 @@ export const getCartFromFirebase = async (uid:string): Promise<{ productId: stri
         quantity: doc.data().quantity
     }))
 }
+
+
+/* --------------------------------
+          Pre-order
+-------------------------------- */
+
+// Funcion para crear una orden de pago
+export const createPreOrder = async (uid:string, items: CartItem[]) => {
+    try {
+        const orderRef = collection(db, 'orders')
+
+        const docRef = await addDoc(orderRef, {
+            userId: uid,
+            items: items,
+            status: 'Pending',
+            paymentStatus: 'Unpaid',
+            createdAt: serverTimestamp()
+        })
+
+        return docRef.id
+    } catch (error) {
+        console.error("Error creando pre-order:", error);
+        throw new Error("No se pudo registrar la orden preliminar");
+    }
+}
+
+// Funcion para completar la Orden de Pago
+export const updateOrder = async (orderId: string, sessionId: string) => {
+    try {
+        const orderRef = doc(db, 'orders', orderId)
+
+        await updateDoc(orderRef, {
+            status: "Paid",
+            paymentStatus: "Completed",
+            stripeSessionId: sessionId,
+            completedAt: serverTimestamp()
+        })
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error actualizando orden en Firebase:", error);
+        throw error; // Re-lanzamos para que el Webhook responda con error 500 a Stripe
+    }
+}
+
+// Funcion para Obtener un orden
+export const getOrderById = async (orderId: string) => {
+    const orderRef = doc(db, "orders", orderId);
+    const orderSnap = await getDoc(orderRef);
+    return orderSnap
+}
+
+// Funcion para limpiar carrito despues del pago
+export const clearUserCart = async (uid: string) => {
+  try {
+    // Si tu carrito es un documento dentro de una colección 'carts'
+    const cartRef = doc(db, `users/${uid}/cart`); 
+    
+    // Opción 1: Borrar el documento
+    // await deleteDoc(cartRef);
+
+    // Opción 2: Solo vaciar el array de items (si tu estructura es { items: [] })
+    await updateDoc(cartRef, {
+       items: [] 
+    });
+
+    console.log(`🛒 Carrito del usuario ${uid} vaciado.`);
+  } catch (error) {
+    console.error("Error al limpiar carrito:", error);
+  }
+};
