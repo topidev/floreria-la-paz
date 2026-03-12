@@ -38,8 +38,8 @@ export const createOrUpdateUser = async (user: UserData) => {
 
 // Funcion para agregar producto a favoritos
 export const addToFavorite = async (productId: string, uid: string) => {
-    if(!uid) throw new Error('No Autenticado')
-    
+    if (!uid) throw new Error('No Autenticado')
+
     const favoriteRef = doc(db, `users/${uid}/favorites/${productId}`)
     await setDoc(favoriteRef, {
         productId,
@@ -49,8 +49,8 @@ export const addToFavorite = async (productId: string, uid: string) => {
 
 // Funcion para remover producto de favoritos
 export const removeFavorite = async (productId: string, uid: string) => {
-  const favoriteRef = doc(db, `users/${uid}/favorites/${productId}`);
-  await deleteDoc(favoriteRef);
+    const favoriteRef = doc(db, `users/${uid}/favorites/${productId}`);
+    await deleteDoc(favoriteRef);
 }
 
 // Funcion para obtener los favoritos del usuario
@@ -70,7 +70,7 @@ export const getUserFavorites = async (uid: string) => {
 
 
 // Funcion para guardar todo el carrito
-export const syncCart = async (uid:string, products: CartItem[]) => {
+export const syncCart = async (uid: string, products: CartItem[]) => {
     if (!uid) throw new Error('No autenticado');
 
     const batch = writeBatch(db)
@@ -93,8 +93,8 @@ export const syncCart = async (uid:string, products: CartItem[]) => {
 }
 
 // Funcion para cargar cart de Firebase
-export const getCartFromFirebase = async (uid:string): Promise<{ productId: string, quantity: number }[]> => {
-    if(!uid) return []
+export const getCartFromFirebase = async (uid: string): Promise<{ productId: string, quantity: number }[]> => {
+    if (!uid) return []
 
     const snapshot = await getDocs(collection(db, `users/${uid}/cart`))
     return snapshot.docs.map((doc) => ({
@@ -102,3 +102,19 @@ export const getCartFromFirebase = async (uid:string): Promise<{ productId: stri
         quantity: doc.data().quantity
     }))
 }
+
+export const getUserOrders = async (userId: string) => {
+    const ordersRef = collection(db, "orders");
+    // Filtramos por userId y ordenamos por las más recientes
+    const q = query(
+        ordersRef,
+        where("userId", "==", userId),
+        orderBy("completedAt", "desc")
+    );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+};
