@@ -20,10 +20,10 @@ export const testimonials = [
 ];
 
 export const ctas_imgs = [
-  { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products/hbd" },
+  { src: "/images/ctas/hbd.png", alt: "Feliz Cumpleaños", title: "Feliz Cumpleaños", link: "/products" },
   { src: "/images/ctas/events.png", alt: "Eventos", title: "Eventos", link: "/events" },
-  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products/sets" },
-  { src: "/images/ctas/bottle.png", alt: "Condolencias", title: "Condolencias", link: "products/accessories" }
+  { src: "/images/ctas/sets.png", alt: "Conjuntos", title: "Conjuntos", link: "/products" },
+  { src: "/images/ctas/bottle.png", alt: "Condolencias", title: "Condolencias", link: "products" }
 ]
 
 export const bestSellers = [
@@ -32,28 +32,28 @@ export const bestSellers = [
     price: 1250,
     image: '/images/products/oasis-rose-box.jpg',
     alt: 'Caja de rosas preservadas Oasis',
-    link: '/products/oasis-rose-box',
+    link: '/products',
   },
   {
     title: 'Desert Sunset',
     price: 890,
     image: '/images/products/desert-sunset.jpg',
     alt: 'Arreglo inspirado en atardecer del desierto',
-    link: '/products/desert-sunset',
+    link: '/products',
   },
   {
     title: 'Minimalist Cactus',
     price: 650,
     image: '/images/products/minimalist-cactus.jpg',
     alt: 'Cactus minimalista en maceta',
-    link: '/products/minimalist-cactus',
+    link: '/products',
   },
   {
     title: 'La Paz Breeze',
     price: 1400,
     image: '/images/products/la-paz-breeze.jpg',
     alt: 'Arreglo marino inspirado en La Paz',
-    link: '/products/la-paz-breeze',
+    link: '/products',
   },
 ];
 

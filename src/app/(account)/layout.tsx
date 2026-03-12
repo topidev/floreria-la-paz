@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
+import Link from "next/link"
 
 
 export const sidebarNavItems = [
@@ -53,10 +55,22 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 
     return (
         <div className="mx-auto flex min-h-screen flex-col md:flex-row">
-            {/* Sidebar - visible en desktop, oculto en mobile (puedes usar Sheet para mobile) */}
             <aside className="hidden w-64 shrink-0 border-r bg-muted/40 md:block">
                 <div className="sticky top-16 h-full overflow-y-auto p-6">
                     <div className="space-y-6 flex flex-col h-full">
+                        <div className="relative block">
+                            <Link
+                                href="/"
+                            >
+                                <Image
+                                    // fill
+                                    width={80}
+                                    height={80}
+                                    alt="DesertBloom"
+                                    src="/images/assets/desertBloom.webp"
+                                />
+                            </Link>    
+                        </div>
                         <div>
                             <h2 className="text-lg font-semibold tracking-tight">Mi Cuenta</h2>
                             <p className="text-sm text-muted-foreground">

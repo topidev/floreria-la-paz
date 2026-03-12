@@ -18,6 +18,15 @@ export const getAllCategories = `*[_type == "category"] | order(_createdAt desc)
   icon
 }`;
 
+
+export const getAllOccacions = `*[_type == "occasions"] | order(_createdAt desc) {
+  _id,
+  title,
+  slug,
+  description,
+  icon,
+}`
+
 // Query para todos los productos (para catálogo)
 export const allProductsQuery = `*[_type == "product"] | order(_createdAt desc) {
   _id,
@@ -37,7 +46,7 @@ export const allProductsQuery = `*[_type == "product"] | order(_createdAt desc) 
     alt
   },
   categories[]-> { title, slug },
-  occasions,
+  events[]-> { title, slug },
   tags
 }`;
 
@@ -64,7 +73,7 @@ export const productBySlugQuery = `*[_type == "product" && slug.current == $slug
   },
   "mainImage": images[0],
   categories[]-> { title, slug },
-  occasions,
+  events,
   stock,
   isAvailable,
   tags,
@@ -88,7 +97,7 @@ export const productsByIds = `*[_type == "product" && _id in $ids] | order(_crea
   },
   categories[]-> { title, slug },
   isAvailable,
-  occasions,
+  events,
   stock,
   tags,
 }`

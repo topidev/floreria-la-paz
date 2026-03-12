@@ -57,7 +57,7 @@ export default function Header() {
               />
             </span>
             <span className="text-lg sm:text-xl lg:text-2xl font-serif font-bold text-primary">
-              DesertBloom
+              DB
             </span>
           </Link>
 

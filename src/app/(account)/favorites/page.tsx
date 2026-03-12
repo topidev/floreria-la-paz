@@ -12,40 +12,51 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 
 export default function FavoritesPage() {
   const { user } = useAuth()
   const router = useRouter()
+  const { toggleFavorite, loadFavorites, isLoading: loadingIds, favoriteIds } = useFavoritesStore()
 
   useEffect(() => {
-    if (!user) router.push('/')
-  }, [user, router])
+    if (user?.uid) {
+      loadFavorites(user.uid);
+      console.log(favoriteIds)
+    } else {
+      router.push('/');
+    }
+  }, [user?.uid, loadFavorites, router]);
 
 
-  const { data: favoriteIds = [], isLoading: loadingIds } = useQuery({
-    queryKey: ['user-favorites', user?.uid],
-    queryFn: async () => {
-      if (!user?.uid) return []
-      return await getUserFavorites(user.uid)
-    },
-    enabled: !!user?.uid
-  })
+  // const { data: favoriteIds = [], isLoading: loadingIds } = useQuery({
+  //   queryKey: ['user-favorites', user?.uid],
+  //   queryFn: async () => {
+  //     if (!user?.uid) return []
+  //     return await getUserFavorites(user.uid)
+  //   },
+  //   enabled: !!user?.uid
+  // })
+
+  const favoriteIdsArray = Array.from(favoriteIds);
 
   const { data: products, isLoading: loadingProducts } = useQuery({
-    queryKey: ['favorites-products', favoriteIds],
+    queryKey: ['favorites-products', favoriteIdsArray],
     queryFn: async () => {
       try {
-        if (favoriteIds.length === 0) return []
-        const result = await client.fetch(productsByIds, { ids: favoriteIds })
+        console.log(favoriteIdsArray)
+        if (favoriteIdsArray.length === 0) return []
+        const result = await client.fetch(productsByIds, { ids: favoriteIdsArray })
         console.log(result)
-        return result
+        return result as Product[]
       } catch (error) {
         console.log(error)
         return []
       }
     },
-    enabled: favoriteIds.length > 0
+    enabled: favoriteIdsArray.length > 0
   })
 
   const isLoading = loadingIds || loadingProducts
@@ -63,7 +74,7 @@ export default function FavoritesPage() {
     );
   }
 
-  if (products.length === 0) {
+  if (products?.length === 0) {
     return (
       <div className="text-center py-20">
         <Heart className="mx-auto h-16 w-16 text-muted-foreground" />
@@ -81,13 +92,13 @@ export default function FavoritesPage() {
 
   return (
     <section className="mt-6">
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Mis Favoritos ({products.length})</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-8">Mis Favoritos ({products?.length})</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product: Product) => (
+        {products?.map((product: Product) => (
           <div
             key={product._id}
-            className="group overflow-hidden rounded-2xl border bg-background/30 shadow-sm hover:shadow-md transition-all"
+            className="group relative overflow-hidden rounded-2xl border bg-background/30 shadow-sm hover:shadow-md transition-all"
           >
             <Link href={`/product/${product.slug}`}>
               <div className="relative aspect-square overflow-hidden bg-background">
@@ -103,12 +114,27 @@ export default function FavoritesPage() {
                   />
                 )}
                 {product.isOnSale && (
-                  <div className="absolute top-3 right-3 bg-rose-600 text-accent text-xs px-3 py-1 rounded-full">
+                  <div className="absolute top-3 left-3 bg-rose-600 text-accent text-xs px-3 py-1 rounded-full">
                     Oferta
                   </div>
                 )}
               </div>
             </Link>
+            <Button
+              className='cursor-pointer p-0 duration-250 group z-10
+                absolute top-2 right-2 bg-primary-foreground rounded 
+                transition-colors
+              '
+              onClick={() => toggleFavorite(product._id, user.uid)}
+            >
+              <Heart
+                className={`
+                  h-4 w-4 transition-colors duration-250
+                  group-hover:text-secondary-foreground
+                  fill-red-500 text-red-500 group-hover:text-red-600"
+                `}
+              />
+            </Button>
 
             <div className="p-4">
               <h3 className="font-medium line-clamp-2">{product.title}</h3>

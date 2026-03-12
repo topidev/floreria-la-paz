@@ -4,13 +4,13 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/studio/client';
-import { allProductsQuery, getAllCategories } from '../../../studio/helpers';
+import { allProductsQuery, getAllCategories, getAllOccacions } from '../../../studio/helpers';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { ArrowDown, ChevronDown, Heart } from 'lucide-react';
+import { ChevronDown, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { useDebounce } from 'use-debounce'
@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { useProductsFilters } from '@/hooks/useProductsFilters';
 import { useAuth } from '@/context/AuthContext';
@@ -32,6 +32,11 @@ export default function ProductsPage() {
   const [offerFilter, setOfferFilter] = useState(false)
   const [checked, setChecked] = useState('all')
   const { user } = useAuth()
+  const [priceFilter, setPriceFilter] = useState('')
+  const [priceChecked, setPriceChecked] = useState('Cualquier Precio')
+
+  const [eventFilter, setEventFilter] = useState('')
+  const [eventChecked, setEventChecked] = useState('all')
 
   const { favoriteIds, loadFavorites, toggleFavorite } = useFavoritesStore()
 
@@ -40,7 +45,6 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(allProductsQuery);
-        // console.log(result)
         return result;
       } catch (err) {
         console.error('Error fetching Sanity:', err);
@@ -54,7 +58,6 @@ export default function ProductsPage() {
     queryFn: async () => {
       try {
         const result = await client.fetch(getAllCategories);
-        // console.log("Categorías: ", result)
         return result
       } catch (error) {
         console.error('Error buscando categorías', error)
@@ -63,10 +66,44 @@ export default function ProductsPage() {
     }
   })
 
+  const { data: events } = useQuery({
+    queryKey: ['occacions'],
+    queryFn: async () => {
+      try {
+        const result = await client.fetch(getAllOccacions)
+        console.log(result)
+        return result
+      } catch (err) {
+        console.error('Error buscando eventos')
+        throw err
+      }
+    }
+  })
+
+  const prices = [
+    {
+      minMaxPrice: "$0 - $100"
+    },
+    {
+      minMaxPrice: "$100 - $500"
+    },
+    {
+      minMaxPrice: "$500 - $1000"
+    },
+    {
+      minMaxPrice: "$1000 - $3000"
+    },
+    {
+      minMaxPrice: "Cualquier Precio"
+    }
+  ]
+
   const filters = {
     search: debounceSearch,
     category: categoryFilter,
     offer: offerFilter,
+    price: priceFilter,
+    events: eventFilter
   }
   const filteredProducts = useProductsFilters(products ?? [], filters)
 
@@ -113,9 +150,9 @@ export default function ProductsPage() {
           className='h-12 w-full max-w-3xl m-auto block mb-8 p-3 md:text-lg lg:h-16'
         />
 
-        <div className="filtersb py-2 max-w-3xl m-auto flex justify-center items-center mb-8 gap-4">
+        <div className="filters py-2 max-w-3xl m-auto flex flex-wrap flex-cols md:flex-rows justify-between items-center mb-8 gap-4 md:gap-3">
           <DropdownMenu>
-            <DropdownMenuTrigger className='duration-300 cursor-pointer' asChild>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
               <Button variant='outline' >
                 {
                   checked === 'all' ? 'Categorías' : `${categoryFilter}`
@@ -144,17 +181,85 @@ export default function ProductsPage() {
                       onClick={() => setCategoryFilter(cat.title)}
                     >
                       <span>{cat.title} </span>
-                      {/* <span>{cat.icon}</span> */}
                     </DropdownMenuRadioItem >
                   ))}
                 </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div
-            className='flex gap-2 w-fit border duration-300 bg-secondary/50 hover:bg-secondary py-1.75 px-2.5 rounded-md'
-            onClick={() => setOfferFilter(!offerFilter)}
-          >
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
+              <Button
+                variant='outline'
+                className='cduration-300'
+              >
+                {
+                  priceChecked === 'Cualquier Precio' ? 'Precio' : `${priceFilter}`
+                }
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuRadioGroup
+                  value={priceFilter}
+                  onValueChange={setPriceFilter}
+                >
+                  {prices.map((priceFilter, index) => (
+                    <DropdownMenuRadioItem
+                      key={index}
+                      value={priceFilter.minMaxPrice}
+                      className='flex gap-2 cursor-pointer'
+                      onClick={() => {
+                        console.log(priceFilter.minMaxPrice)
+                        setPriceChecked(priceFilter.minMaxPrice)}
+                      }
+                    >
+                      <span>{priceFilter.minMaxPrice}</span>
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger className='w-full md:w-1/4 duration-300 cursor-pointer' asChild>
+              <Button variant='outline' >
+                {
+                  eventChecked === 'all' ? 'Evento' : `${eventFilter}`
+                }
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuRadioGroup
+                  value={eventChecked}
+                  onValueChange={setEventChecked}
+                >
+                  <DropdownMenuRadioItem
+                    value='all'
+                    className='flex gap-2 cursor-pointer'
+                    onClick={() => setEventFilter('')}
+                  >
+                    <span>Todas</span>
+                  </DropdownMenuRadioItem >
+                  {events?.map((evnt: any) => (
+                    <DropdownMenuRadioItem
+                      value={evnt.slug}
+                      key={evnt._id}
+                      className='flex cursor-pointer'
+                      onClick={() => setEventFilter(evnt.title)}
+                    >
+                      <span>{evnt.title} </span>
+                    </DropdownMenuRadioItem >
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div className="flex items-center justify-center gap-3 w-full md:w-1/5">
             <Checkbox
               checked={offerFilter}
               className='cursor-pointer w-5 h-5'
@@ -163,61 +268,6 @@ export default function ProductsPage() {
             />
             <Label htmlFor="offer-checkbox" className='cursor-pointer'>En Oferta</Label>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant='outline'
-                className='cursor-pointer duration-300'
-              >
-                Precio
-                <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuGroup>
-                <DropdownMenuRadioGroup
-                  value='min'
-                // onValueChange={setChecked}
-                >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$0 - $100</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$100 - $500</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$500 - $1000</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='all'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>$1000 - $3000</span>
-                  </DropdownMenuRadioItem >
-                  <DropdownMenuRadioItem
-                    value='min'
-                    className='flex gap-2 cursor-pointer'
-                  // onClick={() => setCategoryFilter('')}
-                  >
-                    <span>Cualquier Precio</span>
-                  </DropdownMenuRadioItem >
-                </DropdownMenuRadioGroup>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

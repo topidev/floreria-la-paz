@@ -13,7 +13,7 @@ export const useFavoritesStore = create<FavoriteState>()(
 
     async loadFavorites(uid) {
       if (!uid) return;
-        set({ isLoading: true });
+      set({ isLoading: true, error: null });
       try {
         const ids = await getUserFavorites(uid);
         set({ favoriteIds: new Set(ids), isLoading: false });
@@ -26,7 +26,8 @@ export const useFavoritesStore = create<FavoriteState>()(
       if (!uid) return;
 
       const currentlyFavorite = get().favoriteIds.has(productId);
-      const optimisticSet = new Set(get().favoriteIds);
+      const previusIds = new Set(get().favoriteIds)
+      const optimisticSet = new Set(previusIds);
 
       // Optimistic update
       if (currentlyFavorite) {
@@ -48,7 +49,7 @@ export const useFavoritesStore = create<FavoriteState>()(
       } catch (err) {
         console.error('Error en favorito:', err);
         // Rollback -> si no se pudo actualizar
-        set({ favoriteIds: new Set(get().favoriteIds) });
+        set({ favoriteIds: previusIds });
         // toast.error("No se pudo actualizar favorito")
       }
     },

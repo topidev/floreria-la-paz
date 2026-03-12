@@ -6,10 +6,13 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
+import { Trash, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 
 export default function CartPage() {
@@ -19,6 +22,8 @@ export default function CartPage() {
   const { user } = useAuth()
   const { isSyncing } = useCartSync(user?.uid);
   const isMounted = useRef(true)
+  const router = useRouter()
+  const [isPaying, setIsPaying] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -34,6 +39,26 @@ export default function CartPage() {
     () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [items]
   )
+
+  const handleCheckOut = async () => {
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItems: items, userId: user?.uid })
+      })
+
+      const data = await response.json()
+      if (data.url) {
+        router.push(data.url)
+      }
+    } catch (error) {
+      toast.error("No se pudo completar el pago")
+      console.log(error)
+    } finally {
+      setIsPaying(false)
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -64,14 +89,21 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item._id} className="flex gap-3 md:gap-4 sm:gap-5 border-b pb-6">
               <div className="relative h-32 w-32 shrink-0">
-                <Image src={item.thumbnail.asset.url} alt={item.title} fill className="object-cover rounded" />
+                <Image 
+                  src={item.thumbnail.asset.url} 
+                  alt={item.title} 
+                  fill 
+                  blurDataURL={item.thumbnail.asset.metadata?.lqip}
+                  className="object-cover rounded" 
+                  placeholder='blur'
+                />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-xl">{item.title}</h3>
                 <p className="text-lg font-semibold text-primary mt-1">
                   ${item.price.toLocaleString('es-MX')}
                 </p>
-                <div className="flex flex-col items-start md:flex-row md:items-center gap-4 mt-4">
+                <div className="flex items-center md:flex-row md:items-center gap-4 mt-4">
                   <div className="flex items-center border rounded">
                     <Button className='cursor-pointer' variant="ghost" size="icon" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1), user?.uid)}>
                       -
@@ -81,8 +113,8 @@ export default function CartPage() {
                       +
                     </Button>
                   </div>
-                  <Button variant="ghost" className="text-primary-foreground bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
-                    Eliminar
+                  <Button variant="ghost" className="text-primary-foreground duration-300 bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
+                    <Trash2 className='w-4 h-4'/>
                   </Button>
                 </div>
               </div>
@@ -109,15 +141,21 @@ export default function CartPage() {
               </div>
             </div>
             <Button
-              className="w-full mt-5 cursor-pointer"
+              className="w-full flex items-center gap-2 mt-5 cursor-pointer"
               title='Proceder al pago'
               size="lg"
+              disabled={ isPaying }
               onClick={() => {
                 if (user) {
                   syncCart(user.uid, items)
+                  setIsPaying(true)
+                  handleCheckOut()
                 }
               }}
             >
+               {isPaying && (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+               )}
               Proceder al pago
             </Button>
           </Card>
