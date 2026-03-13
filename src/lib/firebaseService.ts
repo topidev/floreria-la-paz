@@ -1,7 +1,7 @@
 // src/lib/firebaseService.ts
 import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch, serverTimestamp, addDoc, updateDoc, orderBy, query, where } from 'firebase/firestore';
 import { db } from './firebase'; // tu config de Firebase
-import { CartItem, UserData } from '../types/types';
+import { CartItem, Order, UserData } from '../types/types';
 
 
 /* --------------------------------
@@ -105,52 +105,6 @@ export const getCartFromFirebase = async (uid: string): Promise<{ productId: str
 }
 
 
-/* --------------------------------
-          Pre-order
--------------------------------- */
-
-// Funcion para crear una orden de pago
-// export const createPreOrder = async (uid: string, items: CartItem[]) => {
-//     try {
-//         const orderRef = collection(db, 'orders')
-
-//         const docRef = await addDoc(orderRef, {
-//             userId: uid,
-//             items: items,
-//             status: 'Pending',
-//             paymentStatus: 'Unpaid',
-//             createdAt: serverTimestamp()
-//         })
-
-//         return docRef.id
-//     } catch (error) {
-//         console.error("Error creando pre-order:", error);
-//         throw new Error("No se pudo registrar la orden preliminar");
-//     }
-// }
-
-export const createPreOrder = async (uid: string, items: CartItem[]) => {
-
-
-    try {
-        const orderRef = collection(db, 'orders');
-        const docRef = await addDoc(orderRef, {
-            userId: uid,  // ← debe ser IGUAL a currentUser.uid
-            items,
-            status: 'Pending',
-            paymentStatus: 'Unpaid',
-            createdAt: serverTimestamp()
-        });
-
-        console.log("Orden creada con ID:", docRef.id);
-        return docRef.id;
-    } catch (error) {
-        console.error("Error creando pre-order:", error);
-        throw error;  // mejor propagar el original
-    }
-};
-
-
 
 // Funcion para Obtener un orden
 export const getOrderById = async (orderId: string) => {
@@ -165,20 +119,23 @@ export const getOrderById = async (orderId: string) => {
     }
 }
 
+export const getUserOrders = async (userId: string): Promise<Order[]> => {
+    try {
+        const ordersRef = collection(db, "orders");
+        // Filtramos por userId y ordenamos por las más recientes
+        const q = query(
+            ordersRef,
+            where("userId", "==", userId),
+            orderBy("completedAt", "desc")
+        );
 
-
-export const getUserOrders = async (userId: string) => {
-    const ordersRef = collection(db, "orders");
-    // Filtramos por userId y ordenamos por las más recientes
-    const q = query(
-        ordersRef,
-        where("userId", "==", userId),
-        orderBy("completedAt", "desc")
-    );
-
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    }));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Order[]
+    } catch (error) {
+        console.error('Error frching user orders: ', error)
+        return []
+    }
 };

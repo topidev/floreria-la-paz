@@ -18,11 +18,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
 
-      console.log('[Auth] onAuthStateChanged disparado → user:', user ? user.uid : 'null');
-      if (user) {
-        console.log('[Auth] Token fresco:', user.getIdTokenResult().then(r => r.expirationTime));
-      }
-
       setUser(user);
       setLoading(false);
     });

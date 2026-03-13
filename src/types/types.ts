@@ -144,3 +144,34 @@ export interface SidebarNavProps {
   items: NavItem[];
   userName?: string | null
 }
+
+
+/* --------------------------------
+            Orders.tsx
+-------------------------------- */
+export interface Order {
+  id: string;
+  userId: string;
+  status: string;
+  paymentStatus: string;
+  completedAt?: Timestamp;
+  createdAt: Timestamp;
+  stripeSessionId: string;
+  items: OrderItem[];
+}
+
+interface OrderItem {
+  quantity: number;
+  price_data: {
+    currency: string;
+    product_data: {
+      images: string[];
+      name: string;
+      metadata: {
+        productId: string;
+        productSlug: string;
+      }
+    }
+    unitAmount: number;
+  }
+}

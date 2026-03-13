@@ -5,6 +5,7 @@ import { client } from "@/studio/client";
 import { productsByIds } from "@/studio/helpers";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import admin from 'firebase-admin'
+import { metadata } from "@/app/layout";
 
 export async function POST(req: Request) {
   try {
@@ -50,12 +51,11 @@ export async function POST(req: Request) {
       // Buscar el precio real en sanity
       const productoReal = sanityProducts.find((p: any) => p._id === item._id);
 
-
       if (!productoReal) {
         throw new Error(`El producto ${item.title || item._id} no existe en Sanity.`);
       }
 
-      // console.log("Producto Completo: ", productoReal)
+      console.log("Producto Completo: ", productoReal)
 
       const price = productoReal.isOnSale && productoReal.salePrice != null ? productoReal.salePrice : productoReal.price
 
@@ -64,7 +64,11 @@ export async function POST(req: Request) {
           currency: 'mxn',
           product_data: {
             name: productoReal.title,
-            images: [productoReal.thumbnail.asset.url]
+            images: [productoReal.thumbnail.asset.url],
+            metadata: {
+              productId: productoReal._id,
+              productslug: productoReal.slug
+            }
           },
           unit_amount: Math.round(price * 100), // Siempre en centavos
         },

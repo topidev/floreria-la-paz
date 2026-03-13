@@ -5,10 +5,12 @@ import { getUserOrders } from "@/lib/firebaseService";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import OrderCard from "@/components/account/orders/OrderCart";
+import { toast } from "sonner";
+import { Order } from "@/types/types";
 
 export default function OrdersPage() {
   const { user } = useAuth()
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,10 +19,13 @@ export default function OrdersPage() {
 
     const fetchOrders = async () => {
       try {
+        setLoading(true)
         const data = await getUserOrders(user.uid);
+        console.log(data)
         setOrders(data);
       } catch (error) {
         console.error("Error al cargar órdenes:", error);
+        toast.error('Error al buscar las ordenes')
       } finally {
         setLoading(false);
       }
