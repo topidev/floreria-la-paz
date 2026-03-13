@@ -1,7 +1,8 @@
 // src/lib/firebaseService.ts
-import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch, serverTimestamp, addDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp, deleteDoc, collection, getDocs, writeBatch, serverTimestamp, addDoc, updateDoc, orderBy, query, where } from 'firebase/firestore';
 import { db } from './firebase'; // tu config de Firebase
 import { CartItem, UserData } from '../types/types';
+
 
 /* --------------------------------
                 user/
@@ -109,74 +110,75 @@ export const getCartFromFirebase = async (uid: string): Promise<{ productId: str
 -------------------------------- */
 
 // Funcion para crear una orden de pago
-export const createPreOrder = async (uid: string, items: CartItem[]) => {
-    try {
-        const orderRef = collection(db, 'orders')
+// export const createPreOrder = async (uid: string, items: CartItem[]) => {
+//     try {
+//         const orderRef = collection(db, 'orders')
 
+//         const docRef = await addDoc(orderRef, {
+//             userId: uid,
+//             items: items,
+//             status: 'Pending',
+//             paymentStatus: 'Unpaid',
+//             createdAt: serverTimestamp()
+//         })
+
+//         return docRef.id
+//     } catch (error) {
+//         console.error("Error creando pre-order:", error);
+//         throw new Error("No se pudo registrar la orden preliminar");
+//     }
+// }
+
+export const createPreOrder = async (uid: string, items: CartItem[]) => {
+
+
+    try {
+        const orderRef = collection(db, 'orders');
         const docRef = await addDoc(orderRef, {
-            userId: uid,
-            items: items,
+            userId: uid,  // ← debe ser IGUAL a currentUser.uid
+            items,
             status: 'Pending',
             paymentStatus: 'Unpaid',
             createdAt: serverTimestamp()
-        })
+        });
 
-        return docRef.id
+        console.log("Orden creada con ID:", docRef.id);
+        return docRef.id;
     } catch (error) {
         console.error("Error creando pre-order:", error);
-        throw new Error("No se pudo registrar la orden preliminar");
+        throw error;  // mejor propagar el original
     }
-}
+};
 
-// Funcion para completar la Orden de Pago
-export const updateOrder = async (orderId: string, sessionId: string) => {
-    try {
-        const orderRef = doc(db, 'orders', orderId)
 
-        await updateDoc(orderRef, {
-            status: "Paid",
-            paymentStatus: "Completed",
-            stripeSessionId: sessionId,
-            completedAt: serverTimestamp()
-        })
-
-        return { success: true };
-    } catch (error) {
-        console.error("Error actualizando orden en Firebase:", error);
-        throw error; // Re-lanzamos para que el Webhook responda con error 500 a Stripe
-    }
-}
 
 // Funcion para Obtener un orden
 export const getOrderById = async (orderId: string) => {
-    const orderRef = doc(db, "orders", orderId);
-    const orderSnap = await getDoc(orderRef);
-    return orderSnap
+    try {
+        const orderRef = doc(db, "orders", orderId);
+        const orderSnap = await getDoc(orderRef);
+        return orderSnap
+    } catch (error) {
+        console.log(JSON.stringify({ event: 'GetOrderById ', "orderId": orderId }))
+        console.log(error)
+        throw error
+    }
 }
 
-// Funcion para limpiar carrito despues del pago
-export const clearUserCart = async (uid: string) => {
-    try {
-        // 1. Referencia a la subcolección de documentos del carrito
-        const cartCollectionRef = collection(db, "users", uid, "cart");
 
-        // 2. Obtenemos todos los documentos actuales (los productos)
-        const snapshot = await getDocs(cartCollectionRef);
 
-        if (snapshot.empty) {
-            console.log("El carrito ya estaba vacío.");
-            return;
-        }
+export const getUserOrders = async (userId: string) => {
+    const ordersRef = collection(db, "orders");
+    // Filtramos por userId y ordenamos por las más recientes
+    const q = query(
+        ordersRef,
+        where("userId", "==", userId),
+        orderBy("completedAt", "desc")
+    );
 
-        // 3. Usamos un Batch para borrar todos de un solo golpe (más eficiente)
-        const batch = writeBatch(db);
-        snapshot.docs.forEach((productDoc) => {
-            batch.delete(productDoc.ref);
-        });
-
-        await batch.commit();
-        console.log(`🛒 Carrito de la subcolección de ${uid} vaciado por completo.`);
-    } catch (error) {
-        console.error("Error al limpiar la subcolección del carrito:", error);
-    }
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
 };

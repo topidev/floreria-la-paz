@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCartSync } from '@/hooks/useCartSync';
 import { syncCart } from '@/lib/firebaseService';
-import { Trash, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -42,11 +42,29 @@ export default function CartPage() {
 
   const handleCheckOut = async () => {
     try {
+      setIsPaying(true)
+      const idToken = await user?.getIdToken(true)
+
+      console.log('[Cliente] ID Token generado (primeros 50 chars):', idToken?.substring(0, 50));
+      console.log('[Cliente] UID del usuario:', user?.uid);
+
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
         body: JSON.stringify({ cartItems: items, userId: user?.uid })
       })
+
+      console.log('[Cliente] Status de respuesta:', response.status);
+      console.log('[Cliente] Headers de respuesta:', [...response.headers.entries()]);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('[Cliente] Error del server:', errorData);
+        throw new Error(errorData.error || 'Error desconocido');
+      }
 
       const data = await response.json()
       if (data.url) {
@@ -89,12 +107,12 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item._id} className="flex gap-3 md:gap-4 sm:gap-5 border-b pb-6">
               <div className="relative h-32 w-32 shrink-0">
-                <Image 
-                  src={item.thumbnail.asset.url} 
-                  alt={item.title} 
-                  fill 
+                <Image
+                  src={item.thumbnail.asset.url}
+                  alt={item.title}
+                  fill
                   blurDataURL={item.thumbnail.asset.metadata?.lqip}
-                  className="object-cover rounded" 
+                  className="object-cover rounded"
                   placeholder='blur'
                 />
               </div>
@@ -114,7 +132,7 @@ export default function CartPage() {
                     </Button>
                   </div>
                   <Button variant="ghost" className="text-primary-foreground duration-300 bg-destructive cursor-pointer" onClick={() => removeItem(item._id, user?.uid)}>
-                    <Trash2 className='w-4 h-4'/>
+                    <Trash2 className='w-4 h-4' />
                   </Button>
                 </div>
               </div>
@@ -144,19 +162,18 @@ export default function CartPage() {
               className="w-full flex items-center gap-2 mt-5 cursor-pointer"
               title='Proceder al pago'
               size="lg"
-              disabled={ isPaying }
+              disabled={isPaying}
               onClick={() => {
                 if (user) {
                   syncCart(user.uid, items)
-                  setIsPaying(true)
                   handleCheckOut()
                 }
               }}
             >
-               {isPaying && (
+              {isPaying && (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-               )}
-              Proceder al pago
+              )}
+              Pagar
             </Button>
           </Card>
         </div>

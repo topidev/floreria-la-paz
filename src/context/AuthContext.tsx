@@ -5,7 +5,6 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { auth, googleProvider } from '../lib/firebase';
 import { User, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { createOrUpdateUser } from '../lib/firebaseService';
 import { AuthContextType } from '../types/types';
 import { handleError } from '../lib/handleError';
@@ -15,10 +14,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+      console.log('[Auth] onAuthStateChanged disparado → user:', user ? user.uid : 'null');
+      if (user) {
+        console.log('[Auth] Token fresco:', user.getIdTokenResult().then(r => r.expirationTime));
+      }
+
       setUser(user);
       setLoading(false);
     });

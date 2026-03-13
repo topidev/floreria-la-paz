@@ -125,10 +125,13 @@ export const useCartStore = create<CartStore>()(
         }
       },
 
-      clearCart: async (uid?: string) => {
+      clearAndSync: async (uid: string) => {
         set({ items: [] });
         if (uid) await syncCart(uid, []);
       },
+      clearCart: () => {
+        set({ items: [] })
+      }
     }),
     {
       name: 'cart-storage',

@@ -71,6 +71,7 @@ export interface CartStore {
   addItem: (item: CartItem, uid?: string) => void;
   removeItem: (id: string, uid?: string) => void;
   updateQuantity: (id: string, quantity: number, uid?: string) => void;
+  clearAndSync: (uid: string) => void;
   clearCart: () => void;
   // getDebouncedSync: (uid: string) => DebouncedState<(currentItems: CartItem[]) => Promise<void> | undefined>;
 }
